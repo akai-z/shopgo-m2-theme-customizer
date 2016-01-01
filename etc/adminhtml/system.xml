@@ -14,9 +14,10 @@
             <resource>ShopGo_ThemeCustomizer::config_theme_customizer</resource>
             <group id="general" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Theme Customizer</label>
-                <field id="themes" translate="label comment" type="text" sortOrder="0" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Themes</label>
+                <field id="theme" translate="label comment" type="select" sortOrder="0" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Theme</label>
                     <comment>Select a theme</comment>
+                    <source_model>ShopGo\ThemeCustomizer\Model\System\Config\Source\Theme</source_model>
                 </field>
             </group>
         </section>
