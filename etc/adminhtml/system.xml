@@ -12,11 +12,11 @@
             <label>Theme Customizer</label>
             <tab>shopgo</tab>
             <resource>ShopGo_ThemeCustomizer::config_theme_customizer</resource>
-            <group id="presets" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Presets</label>
-                <field id="presets" translate="label comment" type="text" sortOrder="0" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Presets</label>
-                    <comment>Select a preset</comment>
+            <group id="general" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Theme Customizer</label>
+                <field id="themes" translate="label comment" type="text" sortOrder="0" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Themes</label>
+                    <comment>Select a theme</comment>
                 </field>
             </group>
         </section>
