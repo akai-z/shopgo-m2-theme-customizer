@@ -3,7 +3,7 @@
  * Copyright © 2015 ShopGo. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace ShopGo\ThemeCustomizer\Model\System\Config\Source;
+namespace ShopGo\ThemeCustomizer\Model\Source;
 
 /**
  * Source model for fonts
