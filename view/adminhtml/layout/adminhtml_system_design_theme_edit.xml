@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 ShopGo. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="theme_edit_tabs">
+            <action method="addTab">
+                <argument name="name" xsi:type="string">customizer_section</argument>
+                <argument name="block" xsi:type="string">ShopGo\ThemeCustomizer\Block\Adminhtml\System\Design\Theme\Edit\Tab\Customizer</argument>
+            </action>
+        </referenceBlock>
+    </body>
+</page>
