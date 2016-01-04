@@ -7,4 +7,5 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Magento\Theme\Block\Adminhtml\System\Design\Theme\Edit\Form" type="ShopGo\ThemeCustomizer\Block\Adminhtml\System\Design\Theme\Edit\Form" />
+    <preference for="Magento\Theme\Model\ResourceModel\Theme\Grid\Collection" type="ShopGo\ThemeCustomizer\Model\ResourceModel\Theme\Grid\Collection" />
 </config>
