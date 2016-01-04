@@ -23,6 +23,11 @@ class Collection extends \Magento\Theme\Model\ResourceModel\Theme\Grid\Collectio
         return $this;
     }
 
+    /**
+     * Add theme filter in order to hide some themes
+     *
+     * @return void
+     */
     protected function _hideThemes()
     {
         $hiddenThemes = $this->_getHiddenThemes();
@@ -37,6 +42,11 @@ class Collection extends \Magento\Theme\Model\ResourceModel\Theme\Grid\Collectio
         $this->addFieldToFilter('main_table.code', $themesFilter);
     }
 
+    /**
+     * Get hidden themes
+     *
+     * @return array
+     */
     protected function _getHiddenThemes()
     {
         return [
