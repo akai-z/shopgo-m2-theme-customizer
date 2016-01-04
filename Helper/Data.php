@@ -30,7 +30,7 @@ class Data extends AbstractHelper
      * Check whether theme is customizable
      *
      * @param string $theme
-     * @return $this
+     * @return boolean
      */
     public function isCustomizableTheme($theme)
     {
