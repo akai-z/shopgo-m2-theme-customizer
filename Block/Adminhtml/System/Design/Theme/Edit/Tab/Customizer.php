@@ -34,6 +34,11 @@ class Customizer extends \Magento\Theme\Block\Adminhtml\System\Design\Theme\Edit
     protected $_themeCustomizerHelper;
 
     /**
+     * @var \ShopGo\ThemeCustomizer\Model\Source\ColorPickerPalette
+     */
+    protected $_colorPickerPalette;
+
+    /**
      * Constructor
      *
      * @param \Magento\Backend\Block\Template\Context $context
@@ -42,6 +47,7 @@ class Customizer extends \Magento\Theme\Block\Adminhtml\System\Design\Theme\Edit
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
      * @param \Magento\Framework\File\Size $fileSize
      * @param \ShopGo\ThemeCustomizer\Helper\Data $themeCustomizerHelper
+     * @param \ShopGo\ThemeCustomizer\Model\Source\ColorPickerPalette $colorPickerPalette
      * @param array $data
      */
     public function __construct(
@@ -51,10 +57,12 @@ class Customizer extends \Magento\Theme\Block\Adminhtml\System\Design\Theme\Edit
         \Magento\Framework\ObjectManagerInterface $objectManager,
         \Magento\Framework\File\Size $fileSize,
         \ShopGo\ThemeCustomizer\Helper\Data $themeCustomizerHelper,
+        \ShopGo\ThemeCustomizer\Model\Source\ColorPickerPalette $colorPickerPalette,
         array $data = []
     ) {
         $this->_fileSize = $fileSize;
         $this->_themeCustomizerHelper = $themeCustomizerHelper;
+        $this->_colorPickerPalette = $colorPickerPalette->getPalette();
         parent::__construct($context, $registry, $formFactory, $objectManager, $data);
     }
 
@@ -211,6 +219,38 @@ class Customizer extends \Magento\Theme\Block\Adminhtml\System\Design\Theme\Edit
         }
 
         return $this;
+    }
+
+    /**
+     * Add color picker field init script
+     *
+     * @param string $id
+     * @param string $color
+     * @return string
+     */
+    protected function _addColorPickerInitScript($id, $color = '#000')
+    {
+        $script = <<<EOF
+    <script>
+        require([
+            'jquery',
+            'ShopGo_ThemeCustomizer/js/spectrum'
+        ], function($) {
+            $('#{$id}').spectrum({
+                color: '{$value}',
+                theme: 'sp-dark',
+                preferredFormat: 'hex6',
+                showInput: true,
+                showPalette: true,
+                clickoutFiresChange: true,
+                cancelText: '',
+                palette: {$this->_colorPickerPalette}
+            });
+        });
+    </script>
+EOF;
+
+        return $script;
     }
 
     /**
