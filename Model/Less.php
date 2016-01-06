@@ -120,7 +120,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
     ) {
         $this->_filesystem = $filesystem;
         $this->_setVarDirectory();
-        
+
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
     }
 
@@ -130,7 +130,17 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected function _setVarDirectory()
     {
         $this->_varDirectory = $this->_filesystem
-            ->getDirectoryRead(DirectoryList::VAR_DIR . '/' . self::VAR_THEME_CUSTOMIZER_PATH);
+            ->getDirectoryRead(DirectoryList::VAR_DIR);
+    }
+
+    /**
+     * Get var theme customizer directory
+     *
+     * @return string
+     */
+    protected function _getVarThemeCustomizerDirectory()
+    {
+        return self::VAR_THEME_CUSTOMIZER_PATH . '/' . $this->_theme;
     }
 
     /**
@@ -159,7 +169,8 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected function _fieldsFileExists()
     {
         return $this->_varDirectory->isFile(
-            $this->_theme . '/' . self::FIELDS_FILE_PATH
+            $this->_getVarThemeCustomizerDirectory()
+            . '/' . self::FIELDS_FILE_PATH
         );
     }
 
@@ -171,7 +182,8 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected function _getFieldsLessContent()
     {
         return $this->_varDirectory->readFile(
-            $this->_theme . '/' . self::DESIGN_FIELDS_FILE_PATH
+            $this->_getVarThemeCustomizerDirectory()
+            . '/' . self::DESIGN_FIELDS_FILE_PATH
         );
     }
 
@@ -183,7 +195,8 @@ class Less extends \Magento\Framework\Model\AbstractModel
     /*protected function _fieldsCustomFileExists()
     {
         return $this->_varDirectory->isFile(
-            $this->_theme . '/' . self::FIELDS_CUSTOM_FILE_PATH
+            $this->_getVarThemeCustomizerDirectory()
+            . '/' . self::FIELDS_CUSTOM_FILE_PATH
         );
     }*/
 
@@ -195,7 +208,8 @@ class Less extends \Magento\Framework\Model\AbstractModel
     /*protected function _getFieldsCustomLessContent()
     {
         return $this->_varDirectory->readFile(
-            $this->_theme . '/' . self::FIELDS_CUSTOM_FILE_PATH
+            $this->_getVarThemeCustomizerDirectory()
+            . '/' . self::FIELDS_CUSTOM_FILE_PATH
         );
     }*/
 
@@ -207,7 +221,8 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected function _fieldsSourceFileExists()
     {
         return $this->_varDirectory->isFile(
-            $this->_theme . '/' . self::FIELDS_SOURCE_FILE_PATH
+            $this->_getVarThemeCustomizerDirectory()
+            . '/' . self::FIELDS_SOURCE_FILE_PATH
         );
     }
 
@@ -219,7 +234,8 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected function _getFieldsSourceLessContent()
     {
         return $this->_varDirectory->readFile(
-            $this->_theme . '/' . self::FIELDS_Source_FILE_PATH
+            $this->_getVarThemeCustomizerDirectory()
+            . '/' . self::FIELDS_Source_FILE_PATH
         );
     }
 
@@ -353,7 +369,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
         //}
 
         $less = $this->_getFieldsLessContent();
-        
+
         //if ($lessCustom = $this->_getFieldsCustomLessContent()) {
             //$less = arra_merge($less, $lessCustom);
         //}
@@ -375,10 +391,10 @@ class Less extends \Magento\Framework\Model\AbstractModel
         $less  = $this->_getFieldsSourceLessContent();
         $_vars = array_map('trim', explode(self::LESS_VAR_SEPARATOR, $less));
         $vars  = [];
-        
+
         foreach ($_vars as $var) {
             $varParts = $this->_getVarParts($var);
-            
+
             if (!empty($varParts)) {
                 $vars[$this->_varSection] = $varParts;
             }
@@ -389,7 +405,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
 
     /**
      * Set theme
-     * 
+     *
      * @param string $theme
      */
     public function setTheme($theme)
