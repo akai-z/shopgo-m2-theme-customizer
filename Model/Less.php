@@ -38,6 +38,11 @@ class Less extends \Magento\Framework\Model\AbstractModel
     #const PUB_FIELDS_FILE_PATH = 'frontend/ShopGo';
 
     /**
+     * Fields custom system config
+     */
+    const XPATH_CONFIG_THEMECUSTOMIZER_FIELDS_CUSTOM = 'theme_customizer/fields/custom';
+
+    /**
      * Fields LESS file path
      */
     const FIELDS_FILE_PATH = 'customizer/_fields.less';
@@ -98,6 +103,21 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected $_theme;
 
     /**
+     * @var \Magento\Config\Model\Config\Factory
+     */
+    protected $_configFactory;
+
+    /**
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     */
+    protected $_scopeConfig;
+
+    /**
+     * @var \Magento\Framework\Message\ManagerInterface
+     */
+    protected $messageManager;
+
+    /**
      * @var string
      */
     private $_varSection;
@@ -106,6 +126,9 @@ class Less extends \Magento\Framework\Model\AbstractModel
      * @param \Magento\Framework\Filesystem $filesystem
      * @param \Magento\Framework\Model\Context $context
      * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Config\Model\Config\Factory $configFactory
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Framework\Message\ManagerInterface $messageManager
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
      * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
      * @param array $data
@@ -114,11 +137,18 @@ class Less extends \Magento\Framework\Model\AbstractModel
         \Magento\Framework\Filesystem $filesystem,
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
+        \Magento\Config\Model\Config\Factory $configFactory,
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+        \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
     ) {
-        $this->_filesystem = $filesystem;
+        $this->_filesystem    = $filesystem;
+        $this->_configFactory = $configFactory;
+        $this->_scopeConfig   = $scopeConfig;
+        $this->messageManager = $messageManager;
+
         $this->_setVarDirectory();
 
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
@@ -141,6 +171,40 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected function _getVarThemeCustomizerDirectory()
     {
         return self::VAR_THEME_CUSTOMIZER_PATH . '/' . $this->_theme;
+    }
+
+    /**
+     * Get config model
+     *
+     * @param array $configData
+     * @return \Magento\Config\Model\Config
+     */
+    protected function _getConfigModel($configData = [])
+    {
+        /** @var \Magento\Config\Model\Config $configModel  */
+        $configModel = $this->_configFactory->create(['data' => $configData]);
+        return $configModel;
+    }
+
+    /**
+     * Get config data value
+     *
+     * @param string $path
+     * @return string
+     */
+    protected function _getConfigData($path)
+    {
+        return $this->_getConfigModel()->getConfigDataValue($path);
+    }
+
+    /**
+     * Get config model
+     *
+     * @param array $configData
+     */
+    protected function _setConfigData($configData = [])
+    {
+        $this->_getConfigModel($configData)->save();
     }
 
     /**
@@ -401,6 +465,59 @@ class Less extends \Magento\Framework\Model\AbstractModel
         }
 
         return $vars;
+    }
+
+    /**
+     * Get fields custom less content
+     *
+     * @return string
+     */
+    public function getFieldsCustomLessContent()
+    {
+        return $this->_getConfigData(
+            self::XPATH_CONFIG_THEMECUSTOMIZER_FIELDS_CUSTOM
+        );
+    }
+
+    /**
+     * Set fields custom less content
+     *
+     * @param string $content
+     */
+    public function setFieldsCustomLessContent($content)
+    {
+        try {
+            $group = [
+                'fields' => [
+                    'fields' => [
+                        'custom' => [
+                            'value' => $content
+                        ]
+                    ]
+                ]
+            ];
+
+            $configData = [
+                'section' => 'theme_customizer',
+                'website' => null,
+                'store'   => null,
+                'groups'  => $group
+            ];
+
+            $this->_setConfigData($configData);
+
+            $this->messageManager->addSuccess(__('You saved the configuration.'));
+        } catch (\Magento\Framework\Exception\LocalizedException $e) {
+            $messages = explode("\n", $e->getMessage());
+            foreach ($messages as $message) {
+                $this->messageManager->addError($message);
+            }
+        } catch (\Exception $e) {
+            $this->messageManager->addException(
+                $e,
+                __('Something went wrong while saving this configuration:') . ' ' . $e->getMessage()
+            );
+        }
     }
 
     /**
