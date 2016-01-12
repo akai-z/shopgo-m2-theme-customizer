@@ -510,9 +510,9 @@ class Less extends \Magento\Framework\Model\AbstractModel
      */
     public function parseFieldsLess()
     {
-        //if (!$this->_fieldsFileExists()) {
-            //return [];
-        //}
+        if (!$this->_fieldsFileExists()) {
+            return [];
+        }
 
         $less = $this->_getFieldsLessContent();
 
@@ -526,9 +526,9 @@ class Less extends \Magento\Framework\Model\AbstractModel
      */
     public function parseFieldsSourceLess()
     {
-        //if (!$this->_fieldsSourceLessFileExists()) {
-            //return [];
-        //}
+        if (!$this->_fieldsSourceFileExists()) {
+            return [];
+        }
 
         $less  = $this->_getFieldsSourceLessContent();
         $_vars = array_map('trim', explode(self::LESS_VAR_SEPARATOR, $less));
