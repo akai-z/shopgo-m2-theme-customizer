@@ -145,6 +145,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
 
         $this->_setVarDirectoryReader();
         $this->_setVarDirectoryWriter();
+        $this->_setStaticDirectoryWriter();
 
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
     }
