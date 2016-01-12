@@ -94,11 +94,6 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected $_configFactory;
 
     /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
-     */
-    protected $_scopeConfig;
-
-    /**
      * @var \Magento\Framework\Message\ManagerInterface
      */
     protected $messageManager;
@@ -118,7 +113,6 @@ class Less extends \Magento\Framework\Model\AbstractModel
      * @param \Magento\Framework\Model\Context $context
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Config\Model\Config\Factory $configFactory
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magento\Framework\Message\ManagerInterface $messageManager
      * @param \Magento\Framework\App\State $appState
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
@@ -130,7 +124,6 @@ class Less extends \Magento\Framework\Model\AbstractModel
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
         \Magento\Config\Model\Config\Factory $configFactory,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Framework\Message\ManagerInterface $messageManager,
         State $appState,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
@@ -139,7 +132,6 @@ class Less extends \Magento\Framework\Model\AbstractModel
     ) {
         $this->_filesystem    = $filesystem;
         $this->_configFactory = $configFactory;
-        $this->_scopeConfig   = $scopeConfig;
         $this->messageManager = $messageManager;
         $this->_appState      = $appState;
 
