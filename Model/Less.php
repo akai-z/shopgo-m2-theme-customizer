@@ -14,11 +14,6 @@ use Magento\Framework\App\State;
 class Less extends \Magento\Framework\Model\AbstractModel
 {
     /**
-     * Pub frontend path
-     */
-    const PUB_FRONTEND_PATH = 'frontend/ShopGo';
-
-    /**
      * Var theme customizer path
      */
     const VAR_THEME_CUSTOMIZER_PATH = 'shopgo/theme_customizer';
