@@ -797,7 +797,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
     public function deleteCustomCss($customCssPath = '')
     {
         if ($customCssPath) {
-            return $this->_staticDirectory->delete($customCssPath);
+            return $this->_staticDirectoryWriter->delete($customCssPath);
         }
 
         $locales = $this->_getStaticThemeLocaleDirectories();
