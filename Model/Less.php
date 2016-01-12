@@ -130,6 +130,8 @@ class Less extends \Magento\Framework\Model\AbstractModel
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
     ) {
+        parent::__construct($context, $registry, $resource, $resourceCollection, $data);
+
         $this->_filesystem    = $filesystem;
         $this->_configFactory = $configFactory;
         $this->messageManager = $messageManager;
@@ -138,8 +140,6 @@ class Less extends \Magento\Framework\Model\AbstractModel
         $this->_setVarDirectoryReader();
         $this->_setVarDirectoryWriter();
         $this->_setStaticDirectoryWriter();
-
-        parent::__construct($context, $registry, $resource, $resourceCollection, $data);
     }
 
     /**
