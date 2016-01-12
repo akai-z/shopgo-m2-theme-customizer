@@ -73,6 +73,11 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected $_varDirectoryWriter;
 
     /**
+     * @var \Magento\Framework\Filesystem\Directory\WriteInterface
+     */
+    protected $_staticDirectoryWriter;
+
+    /**
      * @var string
      */
     protected $_theme;
@@ -146,6 +151,15 @@ class Less extends \Magento\Framework\Model\AbstractModel
     {
          $this->_varDirectoryWriter = $this->_filesystem
             ->getDirectoryWrite(DirectoryList::VAR_DIR);
+    }
+
+    /**
+     * Set Static directory writer
+     */
+    protected function _setStaticDirectoryWriter()
+    {
+        $this->_staticDirectoryWriter = $this->_filesystem
+            ->getDirectoryWrite(DirectoryList::STATIC_VIEW);
     }
 
     /**
