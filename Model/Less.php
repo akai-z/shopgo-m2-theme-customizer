@@ -582,10 +582,20 @@ class Less extends \Magento\Framework\Model\AbstractModel
         $vars  = [];
 
         foreach ($_vars as $var) {
-            $varParts = $this->_getVarParts($var);
+            $varParts = $this->_getVarParts($var, true);
 
             if (!empty($varParts)) {
-                $vars[$this->_varSection] = $varParts;
+                $values = [];
+                $value = rtrim($varParts['value'], ';');
+                $value = array_map('trim', explode('|', $value));
+
+                foreach ($value as $val) {
+                    $values[$val] = $val;
+                }
+
+                $varParts['value'] = $values;
+
+                $vars[$this->_varSection][] = $varParts;
             }
         }
 
