@@ -23,6 +23,11 @@ class Less extends \Magento\Framework\Model\AbstractModel
     const VAR_THEME_CUSTOMIZER_PATH = 'shopgo/theme_customizer';
 
     /**
+     * Custom theme CSS file path
+     */
+    const CUSTOM_CSS_FILE_PATH = 'css/theme.css';
+
+    /**
      * Fields custom system config
      */
     const XPATH_CONFIG_THEMECUSTOMIZER_FIELDS_CUSTOM = 'theme_customizer/%sfields/custom';
@@ -213,6 +218,19 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected function _getCustomLessAbsolutePath()
     {
         return $this->_varDirectoryReader->getAbsolutePath($this->_getCustomLessPath());
+    }
+
+    /**
+     * Get custom CSS absolute path
+     *
+     * @return string
+     */
+    protected function _getCustomCssAbsolutePath($locale)
+    {
+        return $this->_staticDirectoryWriter->getDriver()->getAbsolutePath(
+            $this->_getStaticThemeDirectoryPath() . '/' . $locale . '/' . self::CUSTOM_CSS_FILE_PATH,
+            null, null
+        );
     }
 
     /**
