@@ -49,6 +49,11 @@ class Less extends \Magento\Framework\Model\AbstractModel
     const VAR_SOURCE_FILE_PATH = 'customizer/_var_source.less';
 
     /**
+     * Theme LESS file path
+     */
+    const THEME_FILE_PATH = 'theme.less';
+
+    /**
      * Fields LESS section separator
      */
     const FIELDS_SECTION_SEPARATOR = '//========';
@@ -238,6 +243,18 @@ class Less extends \Magento\Framework\Model\AbstractModel
         return $this->_staticDirectoryWriter->getDriver()->getAbsolutePath(
             $this->_getStaticThemeDirectoryPath() . '/' . $locale . '/' . self::CUSTOM_CSS_FILE_PATH,
             null, null
+        );
+    }
+
+    /**
+     * Get theme LESS file absolute path
+     *
+     * @return string
+     */
+    protected function _getThemeLessFileAbsolutePath()
+    {
+        return $this->_varDirectoryReader->getAbsolutePath(
+            $this->_getVarThemeCustomizerDirectory() . '/' . self::THEME_FILE_PATH
         );
     }
 
@@ -558,6 +575,38 @@ class Less extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
+     * Delete custom less file
+     *
+     * @return boolean
+     */
+    protected function _deleteCustomLessFile()
+    {
+        return $this->_varDirectoryWriter->delete($this->_getCustomLessFilePath());
+    }
+
+    /**
+     * Create custom less file
+     *
+     * @return boolean
+     */
+    protected function _createCustomLessFile($content)
+    {
+        $fieldsCustomFile = $this->_getCustomLessFilePath();
+
+        if (!$this->_deleteCustomLessFile()) {
+            return false;
+        }
+        if (!$this->_varDirectoryWriter->isWritable(self::VAR_THEME_CUSTOMIZER_PATH)) {
+            return false;
+        }
+
+        $this->_varDirectoryWriter->touch($fieldsCustomFile);
+        $this->_varDirectoryWriter->writeFile($fieldsCustomFile, $content);
+
+        return true;
+    }
+
+    /**
      * Parse fields LESS file
      *
      * @return array
@@ -690,6 +739,36 @@ class Less extends \Magento\Framework\Model\AbstractModel
         }
 
         return trim(rtrim($less, self::LESS_VAR_SEPARATOR . "\n"));
+    }
+
+    /**
+     * Generate CSS from LESS
+     *
+     * @param string $content
+     * @return string
+     */
+    public function getCssFromLess($content)
+    {
+        $parser = new \Less_Parser(
+            [
+                'relativeUrls' => false,
+                'compress' => $this->_appState->getMode() !== State::MODE_DEVELOPER
+            ]
+        );
+
+        if (!$this->_createCustomLessFile($content)) {
+            return '';
+        }
+        if (!$this->_varDirectoryReader->isReadable(
+            $this->_getVarThemeCustomizerDirectory() . '/' . self::THEME_FILE_PATH
+        )) {
+            return '';
+        }
+
+        $parser->parseFile($this->_getThemeLessFileAbsolutePath());
+        $css = $parser->getCss();
+
+        return $css;
     }
 
     /**
