@@ -33,11 +33,12 @@ class Save extends \Magento\Theme\Controller\Adminhtml\System\Design\Theme\Save
         \Magento\Framework\App\Response\Http\FileFactory $fileFactory,
         \Magento\Framework\View\Asset\Repository $assetRepo,
         \Magento\Framework\Filesystem $appFileSystem,
-        \ShopGo\ThemeCustomizer\Helper\Data $themeCustomizerHelper
-        //\ShopGo\ThemeCustomizer\Model\Customizer $themeCustomizerModel
+        \ShopGo\ThemeCustomizer\Helper\Data $themeCustomizerHelper,
+        \ShopGo\ThemeCustomizer\Model\Less $less
     ) {
         $this->_themeCustomizerHelper = $themeCustomizerHelper;
-        //$this->_themeCustomizerModel  = $themeCustomizerModel;
+        $this->_less = $less;
+
         parent::__construct(
             $context,
             $coreRegistry,
@@ -84,9 +85,13 @@ class Save extends \Magento\Theme\Controller\Adminhtml\System\Design\Theme\Save
                     );
                 }
                 if ($this->_themeCustomizerHelper->isCustomizableTheme($theme->getCode())) {
+                    $this->_less->setTheme($theme->getCode());
+                    $this->_less->saveThemeCustomizations($themeData);
+
                     $redirectBack
                         ? $this->_redirect('adminhtml/*/edit', ['id' => $theme->getId()])
                         : $this->_redirect('adminhtml/*/');
+
                     return;
                 }
                 if ($theme && !$theme->isEditable()) {
