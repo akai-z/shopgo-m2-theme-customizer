@@ -225,6 +225,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
     /**
      * Get custom CSS file absolute path
      *
+     * @param string $locale
      * @return string
      */
     protected function _getCustomCssFileAbsolutePath($locale)
