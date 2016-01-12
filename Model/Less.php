@@ -40,7 +40,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
     /**
      * Fields custom system config
      */
-    const XPATH_CONFIG_THEMECUSTOMIZER_FIELDS_CUSTOM = 'theme_customizer/fields/custom';
+    const XPATH_CONFIG_THEMECUSTOMIZER_FIELDS_CUSTOM = 'theme_customizer/%sfields/custom';
 
     /**
      * Fields LESS file path
@@ -474,8 +474,10 @@ class Less extends \Magento\Framework\Model\AbstractModel
      */
     public function getFieldsCustomLessContent()
     {
+        $theme = str_replace('/', '_', $this->_theme);
+
         return $this->_getConfigData(
-            self::XPATH_CONFIG_THEMECUSTOMIZER_FIELDS_CUSTOM
+            sprintf(self::XPATH_CONFIG_THEMECUSTOMIZER_FIELDS_CUSTOM, $theme . '_')
         );
     }
 
@@ -487,8 +489,10 @@ class Less extends \Magento\Framework\Model\AbstractModel
     public function setFieldsCustomLessContent($content)
     {
         try {
+            $theme = str_replace('/', '_', $this->_theme);
+
             $group = [
-                'fields' => [
+                $theme . '_fields' => [
                     'fields' => [
                         'custom' => [
                             'value' => $content
