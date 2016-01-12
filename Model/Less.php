@@ -130,10 +130,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
         \Magento\Framework\Registry $registry,
         \Magento\Config\Model\Config\Factory $configFactory,
         \Magento\Framework\Message\ManagerInterface $messageManager,
-        State $appState,/**
-     * @var array
-     */
-    protected $_customLessArray;
+        State $appState,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
