@@ -21,7 +21,7 @@ class Customizer extends \Magento\Theme\Block\Adminhtml\System\Design\Theme\Edit
      *
      * @var bool
      */
-    protected $_isThemeEditable = false;
+    protected $_isThemeEditable = true;
 
     /**
      * @var \ShopGo\ThemeCustomizer\Helper\Data
@@ -68,8 +68,6 @@ class Customizer extends \Magento\Theme\Block\Adminhtml\System\Design\Theme\Edit
      */
     protected function _prepareForm()
     {
-        $this->_isThemeEditable = true;
-
         /** @var \Magento\Framework\Data\Form $form */
         $form = $this->_formFactory->create();
 
