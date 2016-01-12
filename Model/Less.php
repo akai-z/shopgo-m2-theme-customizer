@@ -89,6 +89,11 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected $_theme;
 
     /**
+     * @var array
+     */
+    protected $_customLessArray;
+
+    /**
      * @var \Magento\Config\Model\Config\Factory
      */
     protected $_configFactory;
@@ -125,7 +130,10 @@ class Less extends \Magento\Framework\Model\AbstractModel
         \Magento\Framework\Registry $registry,
         \Magento\Config\Model\Config\Factory $configFactory,
         \Magento\Framework\Message\ManagerInterface $messageManager,
-        State $appState,
+        State $appState,/**
+     * @var array
+     */
+    protected $_customLessArray;
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
@@ -467,9 +475,10 @@ class Less extends \Magento\Framework\Model\AbstractModel
      * Get fields LESS variable parts
      *
      * @param string $var
+     * @param boolean $skipCustom
      * @return array
      */
-    protected function _getVarParts($var)
+    protected function _getVarParts($var, $skipCustom = false)
     {
         $parts  = [];
         $_parts = array_map('trim', explode(PHP_EOL, $var));
@@ -494,13 +503,50 @@ class Less extends \Magento\Framework\Model\AbstractModel
             );
         }
 
+        $value = rtrim($_varVal[1], ';');
+
+        // Section-Type-Label
+        $customLessVar = "{$_var[0]}-{$_var[1]}-{$_var[2]}";
+
+        if (!$skipCustom && isset($this->_customLessArray[$customLessVar])) {
+            $value = $this->_customLessArray[$customLessVar];
+        }
+
         $parts['type']  = $_var[1];
         $parts['label'] = $_var[2];
-        $parts['value'] = $_varVal[1];
+        $parts['value'] = trim($value, '"');
 
         $this->_varSection = $_var[0];
 
         return $parts;
+    }
+
+    /**
+     * Get custom less variables as array
+     *
+     * @return array
+     */
+    protected function _getCustomLessVarArray()
+    {
+        $less = [];
+        $raw  = $this->getFieldsCustomLessContent();
+
+        if (empty($raw)) {
+            return $less;
+        }
+        if (empty($raw[0])) {
+            return $less;
+        }
+
+        $raw = str_replace('@', '', $raw);
+        $raw = array_map('trim', explode(self::LESS_VAR_SEPARATOR, $raw));
+
+        foreach ($raw as $var) {
+            $_var = array_map('trim', explode(':', $var));
+            $less[$_var[0]] = rtrim($_var[1], ';');
+        }
+
+        return $less;
     }
 
     /**
@@ -515,6 +561,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
         }
 
         $less = $this->_getFieldsLessContent();
+        $this->_customLessArray = $this->_getCustomLessVarArray();
 
         return $this->_getFieldsSections($less);
     }
