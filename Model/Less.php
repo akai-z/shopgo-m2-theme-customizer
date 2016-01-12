@@ -163,6 +163,16 @@ class Less extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
+     * Get static theme directory path
+     *
+     * @return string
+     */
+    protected function _getStaticThemeDirectoryPath()
+    {
+        return 'frontend/' . $this->_theme;
+    }
+
+    /**
      * Get var theme customizer directory
      *
      * @return string
