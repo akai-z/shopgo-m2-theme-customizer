@@ -13,29 +13,14 @@ use Magento\Framework\App\Filesystem\DirectoryList;
 class Less extends \Magento\Framework\Model\AbstractModel
 {
     /**
-     * Design frontend path
-     */
-    #const DESIGN_FRONTEND_PATH = 'design/frontend/Shopgo';
-
-    /**
      * Pub frontend path
      */
     const PUB_FRONTEND_PATH = 'frontend/ShopGo';
 
     /**
-     * Design frontend fields LESS file path
-     */
-    #const DESIGN_FIELDS_FILE_PATH = 'frontend/ShopGo';
-
-    /**
      * Var theme customizer path
      */
     const VAR_THEME_CUSTOMIZER_PATH = 'shopgo/theme_customizer';
-
-    /**
-     * Pub static frontend fields LESS file path
-     */
-    #const PUB_FIELDS_FILE_PATH = 'frontend/ShopGo';
 
     /**
      * Fields custom system config
@@ -86,16 +71,6 @@ class Less extends \Magento\Framework\Model\AbstractModel
      * @var \Magento\Framework\Filesystem\Directory\ReadInterface
      */
     protected $_varDirectory;
-
-    /**
-     * @var \Magento\Framework\Filesystem\Directory\ReadInterface
-     */
-    #protected $_designFrontendDirectory;
-
-    /**
-     * @var \Magento\Framework\Filesystem\Directory\ReadInterface
-     */
-    #protected $_pubFrontendDirectory;
 
     /**
      * @var string
@@ -208,24 +183,6 @@ class Less extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
-     * Set design frontend directory
-     */
-    /*protected function _setDesignFrontendDirectory()
-    {
-        $this->_designFrontendDirectory = $this->_filesystem
-            ->getDirectoryRead(DirectoryList::APP . self::DESIGN_FRONTEND_PATH);
-    }*/
-
-    /**
-     * Set pub frontend directory
-     */
-    /*protected function _setPubFrontendDirectory()
-    {
-        $this->_pubFrontendDirectory = $this->_filesystem
-            ->getDirectoryRead(DirectoryList::STATIC_VIEW . self::PUB_FRONTEND_PATH);
-    }*/
-
-    /**
      * Check whether fields LESS file exists
      *
      * @return boolean
@@ -250,32 +207,6 @@ class Less extends \Magento\Framework\Model\AbstractModel
             . '/' . self::DESIGN_FIELDS_FILE_PATH
         );
     }
-
-    /**
-     * Check whether fields custom LESS file exists
-     *
-     * @return boolean
-     */
-    /*protected function _fieldsCustomFileExists()
-    {
-        return $this->_varDirectory->isFile(
-            $this->_getVarThemeCustomizerDirectory()
-            . '/' . self::FIELDS_CUSTOM_FILE_PATH
-        );
-    }*/
-
-    /**
-     * Get fields custom LESS file content
-     *
-     * @return string
-     */
-    /*protected function _getFieldsCustomLessContent()
-    {
-        return $this->_varDirectory->readFile(
-            $this->_getVarThemeCustomizerDirectory()
-            . '/' . self::FIELDS_CUSTOM_FILE_PATH
-        );
-    }*/
 
     /**
      * Check whether fields source LESS file exists
@@ -433,10 +364,6 @@ class Less extends \Magento\Framework\Model\AbstractModel
         //}
 
         $less = $this->_getFieldsLessContent();
-
-        //if ($lessCustom = $this->_getFieldsCustomLessContent()) {
-            //$less = arra_merge($less, $lessCustom);
-        //}
 
         return $this->_getFieldsSections($less);
     }
