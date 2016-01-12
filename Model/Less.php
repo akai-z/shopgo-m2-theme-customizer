@@ -183,6 +183,19 @@ class Less extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
+     * Get static theme directory absolute path
+     *
+     * @return string
+     */
+    protected function _getStaticThemeDirectoryAbsolutePath()
+    {
+        return $this->_staticDirectoryWriter->getDriver()->getAbsolutePath(
+            DirectoryList::PUB . '/' . DirectoryList::STATIC_VIEW . '/' . $this->_getStaticThemeDirectoryPath(),
+            null, null
+        );
+    }
+
+    /**
      * Get config model
      *
      * @param array $configData
