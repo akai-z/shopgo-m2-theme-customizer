@@ -65,7 +65,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
     /**
      * @var \Magento\Framework\Filesystem\Directory\ReadInterface
      */
-    protected $_varDirectory;
+    protected $_varDirectoryReader;
 
     /**
      * @var \Magento\Framework\Filesystem\Directory\WriteInterface
@@ -124,18 +124,18 @@ class Less extends \Magento\Framework\Model\AbstractModel
         $this->_scopeConfig   = $scopeConfig;
         $this->messageManager = $messageManager;
 
-        $this->_setVarDirectory();
+        $this->_setVarDirectoryReader();
         $this->_setVarDirectoryWriter();
 
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
     }
 
     /**
-     * Set Var directory
+     * Set Var directory reader
      */
-    protected function _setVarDirectory()
+    protected function _setVarDirectoryReader()
     {
-        $this->_varDirectory = $this->_filesystem
+        $this->_varDirectoryReader = $this->_filesystem
             ->getDirectoryRead(DirectoryList::VAR_DIR);
     }
 
@@ -199,7 +199,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
      */
     protected function _fieldsFileExists()
     {
-        return $this->_varDirectory->isFile(
+        return $this->_varDirectoryReader->isFile(
             $this->_getVarThemeCustomizerDirectory()
             . '/' . self::FIELDS_FILE_PATH
         );
@@ -212,7 +212,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
      */
     protected function _getFieldsLessContent()
     {
-        return $this->_varDirectory->readFile(
+        return $this->_varDirectoryReader->readFile(
             $this->_getVarThemeCustomizerDirectory()
             . '/' . self::DESIGN_FIELDS_FILE_PATH
         );
@@ -225,7 +225,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
      */
     protected function _fieldsSourceFileExists()
     {
-        return $this->_varDirectory->isFile(
+        return $this->_varDirectoryReader->isFile(
             $this->_getVarThemeCustomizerDirectory()
             . '/' . self::FIELDS_SOURCE_FILE_PATH
         );
@@ -238,7 +238,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
      */
     protected function _getFieldsSourceLessContent()
     {
-        return $this->_varDirectory->readFile(
+        return $this->_varDirectoryReader->readFile(
             $this->_getVarThemeCustomizerDirectory()
             . '/' . self::FIELDS_Source_FILE_PATH
         );
