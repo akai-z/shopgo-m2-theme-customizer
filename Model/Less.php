@@ -351,6 +351,17 @@ class Less extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
+     * Get LESS image variable value
+     *
+     * @param string $path
+     * @return string
+     */
+    protected function _getLessImageVarValue($path)
+    {
+        return "url('{$path}')";
+    }
+
+    /**
      * Get fields LESS variables
      *
      * @param string $_vars
@@ -654,6 +665,31 @@ class Less extends \Magento\Framework\Model\AbstractModel
                 __('Something went wrong while saving this configuration:') . ' ' . $e->getMessage()
             );
         }
+    }
+
+    /**
+     * Convert submitted form data to LESS
+     *
+     * @param array $data
+     * @return string
+     */
+    public function convertFormDataToLess($data)
+    {
+        $less = '';
+
+        foreach ($data as $var => $val) {
+            if (strpos($var, 'themecustomizer') !== false) {
+                if (gettype($val) == 'array' && strpos($var, 'image') !== false) {
+                    $val = $this->_getLessImageVarValue($val['value']);
+                }
+
+                $less .= str_replace('themecustomizer-', '@', $var)
+                       . ": {$val};\n"
+                       . self::LESS_VAR_SEPARATOR . "\n";
+            }
+        }
+
+        return trim(rtrim($less, self::LESS_VAR_SEPARATOR . "\n"));
     }
 
     /**
