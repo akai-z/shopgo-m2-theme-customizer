@@ -58,11 +58,6 @@ class Less extends \Magento\Framework\Model\AbstractModel
     const FIELDS_VAR_CHILD_SEPARATOR = '//>';
 
     /**
-     * LESS var description label
-     */
-    const LESS_VAR_DESCRIPTION_LABEL = '//Description:';
-
-    /**
      * @var \Magento\Framework\Filesystem
      */
     protected $_filesystem;
@@ -312,6 +307,70 @@ class Less extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
+     * Get LESS variable valid attributes
+     *
+     * @return array
+     */
+    protected function _getLessVarValidAttributes()
+    {
+        return [
+            'description', 'mage-type'
+        ];
+    }
+
+    /**
+     * Get LESS variable attribute value
+     *
+     * @param string $data
+     * @param string $label
+     * @return string
+     */
+    protected function _getLessVarAttributeValue($data, $label)
+    {
+        return trim(substr(
+            $data, strlen("//{$label}:"), strlen($data)
+        ));
+    }
+
+    /**
+     * Get LESS variable attribute code
+     *
+     * @param string $attribute
+     * @return string
+     */
+    protected function _getLessVarAttributeCode($attribute)
+    {
+        $result = '';
+
+        foreach ($this->_getLessVarValidAttributes() as $_attribute) {
+            if (strpos($attribute, $_attribute) !== false) {
+                $result = $_attribute;
+                break;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get LESS variable attributes
+     *
+     * @param array $var
+     * @param array $rawData
+     * @return array
+     */
+    protected function _getLessVarAttributes($var, $rawData)
+    {
+        foreach ($rawData as $data) {
+            if ($attribute = $this->_getLessVarAttributeCode($data)) {
+                $var[$attribute] = $this->_getLessVarAttributeValue($data, $attribute);
+            }
+        }
+
+        return $var;
+    }
+
+    /**
      * Get fields LESS variable parts
      *
      * @param string $var
@@ -336,11 +395,10 @@ class Less extends \Magento\Framework\Model\AbstractModel
         }
 
         if ($partsCount > 1) {
-            $parts['description'] = trim(substr(
-                $_parts[0],
-                strlen(self::LESS_VAR_DESCRIPTION_LABEL),
-                strlen($_parts[0])
-            ));
+            $parts = $this->_getLessVarAttributes(
+                $parts,
+                array_slice($_parts, 0, -1) // Remove the last element of the array
+            );
         }
 
         $parts['type']  = $_var[1];
