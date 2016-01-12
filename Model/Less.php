@@ -259,6 +259,23 @@ class Less extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
+     * Get static theme locale directories
+     *
+     * @return array
+     */
+    protected function _getStaticThemeLocaleDirectories()
+    {
+        $dirs = [];
+        $themePath = $this->_getStaticThemeDirectoryAbsolutePath();
+
+        if ($this->_staticDirectoryWriter->getDriver()->isDirectory($themePath)) {
+            $dirs = scandir($themePath);
+        }
+
+        return $dirs;
+    }
+
+    /**
      * Get config model
      *
      * @param array $configData
@@ -769,6 +786,65 @@ class Less extends \Magento\Framework\Model\AbstractModel
         $css = $parser->getCss();
 
         return $css;
+    }
+
+    /**
+     * Delete custom CSS
+     *
+     * @param string $customCssPath
+     * @return boolean
+     */
+    public function deleteCustomCss($customCssPath = '')
+    {
+        if ($customCssPath) {
+            return $this->_staticDirectory->delete($customCssPath);
+        }
+
+        $locales = $this->_getStaticThemeLocaleDirectories();
+
+        foreach ($locales as $localeDir) {
+            if ($localeDir == '.' || $localeDir == '..') {
+                continue;
+            }
+
+            $customCssPath = $this->_getCustomCssFileAbsolutePath($localeDir);
+
+            if (!$this->_staticDirectoryWriter->delete($customCssPath)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Save custom CSS
+     *
+     * @param string $css
+     * @return boolean
+     */
+    public function saveCustomCss($css)
+    {
+        $result  = true;
+        $locales = $this->_getStaticThemeLocaleDirectories();
+
+        foreach ($locales as $localeDir) {
+            if ($localeDir == '.' || $localeDir == '..') {
+                continue;
+            }
+
+            $customCssPath = $this->_getCustomCssFileAbsolutePath($localeDir);
+
+            if (!$this->deleteCustomCss($customCssPath)) {
+                $result = false;
+                break;
+            }
+
+            $this->_staticDirectoryWriter->touch($customCssPath);
+            $this->_staticDirectoryWriter->writeFile($customCssPath, $css);
+        }
+
+        return $result;
     }
 
     /**
