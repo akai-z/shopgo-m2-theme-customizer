@@ -35,7 +35,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
     /**
      * Fields custom LESS file path
      */
-    #const FIELDS_CUSTOM_FILE_PATH = '_fields_custom.less';
+    const FIELDS_CUSTOM_FILE_PATH = '_fields_custom.less';
 
     /**
      * Var source LESS file path
@@ -180,6 +180,16 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected function _getVarThemeCustomizerDirectory()
     {
         return self::VAR_THEME_CUSTOMIZER_PATH . '/' . $this->_theme;
+    }
+
+    /**
+     * Get var custom less path
+     *
+     * @return string
+     */
+    protected function _getCustomLessPath()
+    {
+        return self::VAR_THEME_CUSTOMIZER_PATH . '/' . self::FIELDS_CUSTOM_FILE_PATH;
     }
 
     /**
