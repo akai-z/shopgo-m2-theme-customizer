@@ -190,11 +190,11 @@ class Less extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
-     * Get custom less path
+     * Get custom less file path
      *
      * @return string
      */
-    protected function _getCustomLessPath()
+    protected function _getCustomLessFilePath()
     {
         return self::VAR_THEME_CUSTOMIZER_PATH . '/' . self::FIELDS_CUSTOM_FILE_PATH;
     }
@@ -213,21 +213,21 @@ class Less extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
-     * Get custom LESS absolute path
+     * Get custom LESS file absolute path
      *
      * @return string
      */
-    protected function _getCustomLessAbsolutePath()
+    protected function _getCustomLessFileAbsolutePath()
     {
-        return $this->_varDirectoryReader->getAbsolutePath($this->_getCustomLessPath());
+        return $this->_varDirectoryReader->getAbsolutePath($this->_getCustomLessFilePath());
     }
 
     /**
-     * Get custom CSS absolute path
+     * Get custom CSS file absolute path
      *
      * @return string
      */
-    protected function _getCustomCssAbsolutePath($locale)
+    protected function _getCustomCssFileAbsolutePath($locale)
     {
         return $this->_staticDirectoryWriter->getDriver()->getAbsolutePath(
             $this->_getStaticThemeDirectoryPath() . '/' . $locale . '/' . self::CUSTOM_CSS_FILE_PATH,
