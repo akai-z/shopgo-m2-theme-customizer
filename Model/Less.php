@@ -6,6 +6,7 @@
 namespace ShopGo\ThemeCustomizer\Model;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\App\State;
 
 /**
  * Less model
@@ -103,6 +104,11 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected $messageManager;
 
     /**
+     * @var \Magento\Framework\App\State
+     */
+    protected $_appState;
+
+    /**
      * @var string
      */
     private $_varSection;
@@ -114,6 +120,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
      * @param \Magento\Config\Model\Config\Factory $configFactory
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magento\Framework\Message\ManagerInterface $messageManager
+     * @param \Magento\Framework\App\State $appState
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
      * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
      * @param array $data
@@ -125,6 +132,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
         \Magento\Config\Model\Config\Factory $configFactory,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Framework\Message\ManagerInterface $messageManager,
+        State $appState,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
@@ -133,6 +141,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
         $this->_configFactory = $configFactory;
         $this->_scopeConfig   = $scopeConfig;
         $this->messageManager = $messageManager;
+        $this->_appState      = $appState;
 
         $this->_setVarDirectoryReader();
         $this->_setVarDirectoryWriter();
