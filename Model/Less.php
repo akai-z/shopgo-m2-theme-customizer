@@ -68,6 +68,11 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected $_varDirectory;
 
     /**
+     * @var \Magento\Framework\Filesystem\Directory\WriteInterface
+     */
+    protected $_varDirectoryWriter;
+
+    /**
      * @var string
      */
     protected $_theme;
@@ -120,6 +125,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
         $this->messageManager = $messageManager;
 
         $this->_setVarDirectory();
+        $this->_setVarDirectoryWriter();
 
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
     }
@@ -131,6 +137,15 @@ class Less extends \Magento\Framework\Model\AbstractModel
     {
         $this->_varDirectory = $this->_filesystem
             ->getDirectoryRead(DirectoryList::VAR_DIR);
+    }
+
+    /**
+     * Set Var directory writer
+     */
+    protected function _setVarDirectoryWriter()
+    {
+         $this->_varDirectoryWriter = $this->_filesystem
+            ->getDirectoryWrite(DirectoryList::VAR_DIR);
     }
 
     /**
