@@ -183,7 +183,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
-     * Get var custom less path
+     * Get custom less path
      *
      * @return string
      */
@@ -203,6 +203,16 @@ class Less extends \Magento\Framework\Model\AbstractModel
             DirectoryList::PUB . '/' . DirectoryList::STATIC_VIEW . '/' . $this->_getStaticThemeDirectoryPath(),
             null, null
         );
+    }
+
+    /**
+     * Get custom LESS absolute path
+     *
+     * @return string
+     */
+    protected function _getCustomLessAbsolutePath()
+    {
+        return $this->_varDirectoryReader->getAbsolutePath($this->_getCustomLessPath());
     }
 
     /**
