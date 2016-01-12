@@ -194,7 +194,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
      *
      * @return string
      */
-    protected function _getVarThemeCustomizerDirectory()
+    protected function _getVarThemeCustomizerDirectoryPath()
     {
         return self::VAR_THEME_CUSTOMIZER_PATH . '/' . $this->_theme;
     }
@@ -254,7 +254,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected function _getThemeLessFileAbsolutePath()
     {
         return $this->_varDirectoryReader->getAbsolutePath(
-            $this->_getVarThemeCustomizerDirectory() . '/' . self::THEME_FILE_PATH
+            $this->_getVarThemeCustomizerDirectoryPath() . '/' . self::THEME_FILE_PATH
         );
     }
 
@@ -317,7 +317,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected function _fieldsFileExists()
     {
         return $this->_varDirectoryReader->isFile(
-            $this->_getVarThemeCustomizerDirectory()
+            $this->_getVarThemeCustomizerDirectoryPath()
             . '/' . self::FIELDS_FILE_PATH
         );
     }
@@ -330,7 +330,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected function _getFieldsLessContent()
     {
         return $this->_varDirectoryReader->readFile(
-            $this->_getVarThemeCustomizerDirectory()
+            $this->_getVarThemeCustomizerDirectoryPath()
             . '/' . self::DESIGN_FIELDS_FILE_PATH
         );
     }
@@ -343,7 +343,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected function _fieldsSourceFileExists()
     {
         return $this->_varDirectoryReader->isFile(
-            $this->_getVarThemeCustomizerDirectory()
+            $this->_getVarThemeCustomizerDirectoryPath()
             . '/' . self::FIELDS_SOURCE_FILE_PATH
         );
     }
@@ -356,7 +356,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected function _getFieldsSourceLessContent()
     {
         return $this->_varDirectoryReader->readFile(
-            $this->_getVarThemeCustomizerDirectory()
+            $this->_getVarThemeCustomizerDirectoryPath()
             . '/' . self::FIELDS_Source_FILE_PATH
         );
     }
@@ -777,7 +777,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
             return '';
         }
         if (!$this->_varDirectoryReader->isReadable(
-            $this->_getVarThemeCustomizerDirectory() . '/' . self::THEME_FILE_PATH
+            $this->_getVarThemeCustomizerDirectoryPath() . '/' . self::THEME_FILE_PATH
         )) {
             return '';
         }
