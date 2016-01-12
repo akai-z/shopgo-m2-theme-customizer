@@ -848,6 +848,21 @@ class Less extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
+     * Save theme customizations
+     *
+     * @param array $content
+     * @return boolean
+     */
+    public function saveThemeCustomizations($content)
+    {
+        $less = $this->convertFormDataToLess($content);
+        $this->setFieldsCustomLessContent($less);
+        $css = $this->getCssFromLess($less);
+
+        return $this->saveCustomCss($css);
+    }
+
+    /**
      * Set theme
      *
      * @param string $theme
