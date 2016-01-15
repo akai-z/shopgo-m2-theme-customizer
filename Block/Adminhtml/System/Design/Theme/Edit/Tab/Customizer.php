@@ -6,8 +6,6 @@
 namespace ShopGo\ThemeCustomizer\Block\Adminhtml\System\Design\Theme\Edit\Tab;
 
 use Magento\Framework\App\Area;
-use Magento\Framework\View\Design\ThemeInterface;
-use Magento\Theme\Model\Theme\Collection;
 use Magento\Config\Model\Config\Source\Yesno;
 use Magento\Config\Model\Config\Source\Enabledisable;
 
@@ -39,6 +37,31 @@ class Customizer extends \Magento\Theme\Block\Adminhtml\System\Design\Theme\Edit
      * @var \ShopGo\ThemeCustomizer\Model\Source\ColorPickerPalette
      */
     protected $_colorPickerPalette;
+
+    /**
+     * @var \ShopGo\ThemeCustomizer\Model\Less
+     */
+    protected $_themeCustomizerLess;
+
+    /**
+     * @var array
+     */
+    protected $_fields;
+
+    /**
+     * @var array
+     */
+    protected $_fieldsSource;
+
+    /**
+     * @var Yesno
+     */
+    protected $_yesNo;
+
+    /**
+     * @var Enabledisable
+     */
+    protected $_enableDisable;
 
     /**
      * Constructor
@@ -74,6 +97,8 @@ class Customizer extends \Magento\Theme\Block\Adminhtml\System\Design\Theme\Edit
         $this->_colorPickerPalette = $colorPickerPalette->getPalette();
 
         $this->_themeCustomizerHelper = $themeCustomizerHelper;
+        $this->_themeCustomizerLess   = $themeCustomizerLess;
+
         $this->_themeCustomizerLess->setTheme(
             $this->_coreRegistry->registry('current_theme')->getCode()
         );
