@@ -130,8 +130,8 @@ class Customizer extends \Magento\Theme\Block\Adminhtml\System\Design\Theme\Edit
     /**
      * Add special fields types attributes
      *
-     * @param string $fieldset
-     * @param string $fields
+     * @param string $fieldType
+     * @param string $id
      * @param array $fieldAttributes
      * @param string $value
      * @return array
@@ -161,7 +161,7 @@ class Customizer extends \Magento\Theme\Block\Adminhtml\System\Design\Theme\Edit
      * Add field source
      *
      * @param string $fieldset
-     * @param array $fields
+     * @param array $field
      * @return array
      */
     protected function _getFieldSource($fieldset, $field)
