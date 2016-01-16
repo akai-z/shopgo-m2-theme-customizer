@@ -86,7 +86,21 @@ class Edit extends \Magento\Theme\Block\Adminhtml\System\Design\Theme\Edit
                      1
                  );
 
+                $resetCustomizerUrl = $this->getUrl(
+                    'shopgo_theme_customizer/system_design_theme/reset',
+                    ['id' => $theme->getId()]
+                );
+
+                $resetJsConfirmMsg = __('Please confirm customizations reset. All saved customizations will be lost.');
+
+                $resetJs = "resetCustomizer('{$resetCustomizerUrl}', '{$resetJsConfirmMsg}')";
+
                 $this->buttonList->remove('reset');
+                $this->addButton(
+                    'reset-customizer',
+                    ['label' => __('Reset Customizer'), 'onclick' => $resetJs, 'class' => 'reset'],
+                    -1
+                );
              }
 
             if ($theme->isDeletable()) {
