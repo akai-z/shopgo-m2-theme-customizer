@@ -26,7 +26,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
     /**
      * Fields LESS file path
      */
-    const FIELDS_FILE_PATH = 'customizer/_fields.less';
+    const FIELDS_FILE_PATH = '_fields.less';
 
     /**
      * Fields custom LESS file path
@@ -41,7 +41,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
     /**
      * Var source LESS file path
      */
-    const VAR_SOURCE_FILE_PATH = 'customizer/_var_source.less';
+    const VAR_SOURCE_FILE_PATH = '_var_source.less';
 
     /**
      * Theme LESS file path
@@ -326,7 +326,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
     {
         return $this->_varDirectoryReader->readFile(
             $this->_getVarThemeCustomizerDirectoryPath()
-            . '/' . self::DESIGN_FIELDS_FILE_PATH
+            . '/' . self::FIELDS_FILE_PATH
         );
     }
 
@@ -339,7 +339,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
     {
         return $this->_varDirectoryReader->isFile(
             $this->_getVarThemeCustomizerDirectoryPath()
-            . '/' . self::FIELDS_SOURCE_FILE_PATH
+            . '/' . self::VAR_SOURCE_FILE_PATH
         );
     }
 
@@ -352,7 +352,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
     {
         return $this->_varDirectoryReader->readFile(
             $this->_getVarThemeCustomizerDirectoryPath()
-            . '/' . self::FIELDS_Source_FILE_PATH
+            . '/' . self::VAR_SOURCE_FILE_PATH
         );
     }
 
