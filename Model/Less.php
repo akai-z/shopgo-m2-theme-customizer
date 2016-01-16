@@ -599,6 +599,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
     /**
      * Create custom less file
      *
+     * @param string $content
      * @return boolean
      */
     protected function _createCustomLessFile($content)
