@@ -587,16 +587,6 @@ class Less extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
-     * Delete custom less file
-     *
-     * @return boolean
-     */
-    protected function _deleteCustomLessFile()
-    {
-        return $this->_varDirectoryWriter->delete($this->_getCustomLessFilePath());
-    }
-
-    /**
      * Create custom less file
      *
      * @param string $content
@@ -606,7 +596,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
     {
         $fieldsCustomFile = $this->_getCustomLessFilePath();
 
-        if (!$this->_deleteCustomLessFile()) {
+        if (!$this->deleteCustomLessFile()) {
             return false;
         }
         if (!$this->_varDirectoryWriter->isWritable(self::VAR_THEME_CUSTOMIZER_PATH)) {
@@ -782,6 +772,16 @@ class Less extends \Magento\Framework\Model\AbstractModel
         $css = $parser->getCss();
 
         return $css;
+    }
+
+    /**
+     * Delete custom less file
+     *
+     * @return boolean
+     */
+    public function deleteCustomLessFile()
+    {
+        return $this->_varDirectoryWriter->delete($this->_getCustomLessFilePath());
     }
 
     /**
