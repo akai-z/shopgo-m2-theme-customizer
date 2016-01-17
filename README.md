@@ -3,23 +3,23 @@ Theme Customizer
 
 
 #### Contents
-*   <a href="#syn">Synopsis</a>
-*   <a href="#over">Overview</a>
-*   <a href="#install">Installation</a>
-*   <a href="#tests">Tests</a>
-*   <a href="#contrib">Contributors</a>
-*   <a href="#lic">License</a>
+*   [Synopsis](#syn)
+*   [Overview](#over)
+*   [Installation](#install)
+*   [Tests](#tests)
+*   [Contributors](#contrib)
+*   [License](#lic)
 
 
-<h2 id="syn">Synopsis</h2>
-
-TODO
-
-<h2 id="over">Overview</h2>
+## <a name="syn"></a>Synopsis
 
 TODO
 
-<h2 id="install">Installation</h2>
+## <a name="over"></a>Overview
+
+TODO
+
+## <a name="install"></a>Installation
 
 Below, you can find two ways to install the theme customizer module. With the release of Magento 2.0, you'll also be able to install modules using the Magento Marketplaces.
 
@@ -59,14 +59,14 @@ The following confirms you installed the module correctly, and that it's enabled
         ShopGo_ThemeCustomizer
         ...
 
-<h2 id="tests">Tests</h2>
+## <a name="tests"></a>Tests
 
 TODO
 
-<h2 id="contrib">Contributors</h2>
+## <a name="contrib"></a>Contributors
 
 Ammar (<ammar@shopgo.me>)
 
-<h2 id="lic">License</h2>
+## <a name="lic"></a>License
 
 [Open Source License](LICENSE.txt)
