@@ -213,7 +213,7 @@ class Customizer extends \Magento\Theme\Block\Adminhtml\System\Design\Theme\Edit
                 'title'    => __($label),
                 'name'     => $id,
                 'required' => false,
-                'value'    => $field['value']
+                'value'    => $type != 'label' ? $field['value'] : ''
             ];
 
             if ($fieldSource = $this->_getFieldSource($fieldsetName, $field)) {
