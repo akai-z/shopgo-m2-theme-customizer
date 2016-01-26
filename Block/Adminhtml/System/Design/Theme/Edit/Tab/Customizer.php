@@ -171,7 +171,7 @@ class Customizer extends \Magento\Theme\Block\Adminhtml\System\Design\Theme\Edit
         if (isset($this->_fieldsSource[$fieldset])) {
             foreach ($this->_fieldsSource[$fieldset] as $_field) {
                 if ($_field['type'] == $field['type']
-                    && $_field['label'] == $field['label']) {
+                    && $_field['identifier'] == $field['identifier']) {
                     $source = $_field['value'];
                     break;
                 }
@@ -193,8 +193,8 @@ class Customizer extends \Magento\Theme\Block\Adminhtml\System\Design\Theme\Edit
         $fieldsetName = $fieldset->getId();
 
         foreach ($fields as $field) {
-            $id    = "themecustomizer-{$fieldsetName}-{$field['type']}-{$field['label']}";
-            $label = ucwords(str_replace('_', ' ', $field['label']));
+            $id    = "themecustomizer-{$fieldsetName}-{$field['type']}-{$field['identifier']}";
+            $label = $field['label'];
 
             $type = isset($field['mage-type'])
                 ? $field['mage-type']

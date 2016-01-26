@@ -452,7 +452,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected function _getLessVarValidAttributes()
     {
         return [
-            'description', 'mage-type'
+            'description', 'mage-type', 'label'
         ];
     }
 
@@ -542,7 +542,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
 
         $value = rtrim($_varVal[1], ';');
 
-        // Section-Type-Label
+        // Section-Type-Identifier
         $customLessVar = "{$_var[0]}-{$_var[1]}-{$_var[2]}";
 
         if (!$skipCustom && isset($this->_customLessArray[$customLessVar])) {
@@ -550,7 +550,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
         }
 
         $parts['type']  = $_var[1];
-        $parts['label'] = $_var[2];
+        $parts['identifier'] = $_var[2];
         $parts['value'] = trim($value, '"');
 
         $this->_varSection = $_var[0];
