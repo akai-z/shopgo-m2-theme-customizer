@@ -200,6 +200,24 @@ class Customizer extends \Magento\Theme\Block\Adminhtml\System\Design\Theme\Edit
                 ? $field['mage-type']
                 : $field['type'];
 
+            if (isset($field['sub-fieldset'])) {
+                $subFieldsetId = "{$fieldsetName}-fieldset-{$field['sub-fieldset']}";
+
+                if (!isset($this->_fieldsets[$subFieldsetId])) {
+                    $this->_fieldsets[$subFieldsetId] = $this->_fieldsets[$fieldsetName]->addFieldset(
+                        $subFieldsetId,
+                        [
+                            'legend' => __(ucwords(str_replace('_', ' ', $field['sub-fieldset']))),
+                            'collapsable' => true
+                        ]
+                    );
+                }
+
+                $fieldset = $this->_fieldsets[$subFieldsetId];
+            } else {
+                $fieldset = $this->_fieldsets[$fieldsetName];
+            }
+
             if ($type == 'image') {
                 $field['value'] = substr(
                     $field['value'],
@@ -253,8 +271,9 @@ class Customizer extends \Magento\Theme\Block\Adminhtml\System\Design\Theme\Edit
             $sectionName = ucwords(str_replace('_', ' ', $section));
 
             $fieldset = $form->addFieldset($section, ['legend' => __($sectionName)]);
-            $this->_addElementTypes($fieldset);
+            $this->_fieldsets[$section] = $fieldset;
 
+            $this->_addElementTypes($fieldset);
             $this->_addFieldsFromLess($fieldset, $fields);
         }
     }

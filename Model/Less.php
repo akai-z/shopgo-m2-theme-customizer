@@ -452,7 +452,8 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected function _getLessVarValidAttributes()
     {
         return [
-            'description', 'mage-type', 'label'
+            'description', 'mage-type', 'label',
+            'sub-fieldset'
         ];
     }
 
