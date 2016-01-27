@@ -194,7 +194,9 @@ class Customizer extends \Magento\Theme\Block\Adminhtml\System\Design\Theme\Edit
 
         foreach ($fields as $field) {
             $id    = "themecustomizer-{$fieldsetName}-{$field['type']}-{$field['identifier']}";
-            $label = $field['label'];
+            $label = isset($field['label'])
+                ? $field['label']
+                : ucwords(str_replace('_', ' ', $field['identifier']));
 
             $type = isset($field['mage-type'])
                 ? $field['mage-type']
