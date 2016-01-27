@@ -593,7 +593,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
      * @param string $content
      * @return boolean
      */
-    protected function _createCustomLessFile($content)
+    public function createCustomLessFile($content)
     {
         $fieldsCustomFile = $this->_getCustomLessFilePath();
 
@@ -760,7 +760,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
             ]
         );
 
-        if (!$this->_createCustomLessFile($content)) {
+        if (!$this->createCustomLessFile($content)) {
             return '';
         }
         if (!$this->_varDirectoryReader->isReadable(
@@ -857,6 +857,16 @@ class Less extends \Magento\Framework\Model\AbstractModel
         $css = $this->getCssFromLess($less);
 
         return $this->saveCustomCss($css);
+    }
+
+    /**
+     * Set area code
+     *
+     * @param string $code
+     */
+    public function setAreaCode($code)
+    {
+        $this->_appState->setAreaCode($code);
     }
 
     /**
