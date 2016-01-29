@@ -7,6 +7,7 @@ namespace ShopGo\ThemeCustomizer\Model;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\State;
+use Magento\Framework\Filesystem\DriverInterface;
 
 /**
  * Less model
@@ -14,9 +15,24 @@ use Magento\Framework\App\State;
 class Less extends \Magento\Framework\Model\AbstractModel
 {
     /**
+     * Design frontend path
+     */
+    const DESIGN_FRONTEND_PATH = 'design/frontend';
+
+    /**
+     * Design customizer LESS path
+     */
+    const DESIGN_CUSTOMIZER_LESS_PATH = 'web/css/source/customizer';
+    
+    /**
      * Var theme customizer path
      */
     const VAR_THEME_CUSTOMIZER_PATH = 'shopgo/theme_customizer';
+    
+    /**
+     * Var theme customizer container directory
+     */
+    const VAR_THEME_CUSTOMIZER_CONTAINER_DIR = 'customizer';
 
     /**
      * Fields custom system config
@@ -77,6 +93,16 @@ class Less extends \Magento\Framework\Model\AbstractModel
      * @var \Magento\Framework\Filesystem\Directory\WriteInterface
      */
     protected $_varDirectoryWriter;
+    
+    /**
+     * @var \Magento\Framework\Filesystem\Directory\ReadInterface
+     */
+    protected $_appDirectoryReader;
+
+    /**
+     * @var \Magento\Framework\Filesystem\Directory\WriteInterface
+     */
+    protected $_appDirectoryWriter;
 
     /**
      * @var \Magento\Framework\Filesystem\Directory\WriteInterface
@@ -144,7 +170,18 @@ class Less extends \Magento\Framework\Model\AbstractModel
 
         $this->_setVarDirectoryReader();
         $this->_setVarDirectoryWriter();
+        $this->_setAppDirectoryReader();
+        $this->_setAppDirectoryWriter();
         $this->_setStaticDirectoryWriter();
+    }
+
+    /**
+     * Set App directory reader
+     */
+    protected function _setAppDirectoryReader()
+    {
+        $this->_appDirectoryReader = $this->_filesystem
+            ->getDirectoryRead(DirectoryList::APP);
     }
 
     /**
@@ -163,6 +200,15 @@ class Less extends \Magento\Framework\Model\AbstractModel
     {
          $this->_varDirectoryWriter = $this->_filesystem
             ->getDirectoryWrite(DirectoryList::VAR_DIR);
+    }
+    
+    /**
+     * Set App directory writer
+     */
+    protected function _setAppDirectoryWriter()
+    {
+         $this->_appDirectoryWriter = $this->_filesystem
+            ->getDirectoryWrite(DirectoryList::APP);
     }
 
     /**
@@ -185,6 +231,16 @@ class Less extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
+     * Get design theme directory path
+     *
+     * @return string
+     */
+    protected function _getDesignThemeDirectoryPath()
+    {
+        return self::DESIGN_FRONTEND_PATH . '/' . $this->_theme . '/' . self::DESIGN_CUSTOMIZER_LESS_PATH;
+    }
+
+    /**
      * Get var theme customizer directory
      *
      * @return string
@@ -192,6 +248,16 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected function _getVarThemeCustomizerDirectoryPath()
     {
         return self::VAR_THEME_CUSTOMIZER_PATH . '/' . $this->_theme;
+    }
+    
+    /**
+     * Get Var theme customizer container directory path
+     *
+     * @return string
+     */
+    protected function _getVarThemeCustomizerContainerDirPath()
+    {
+        return $this->_getVarThemeCustomizerDirectoryPath() . '/' . self::VAR_THEME_CUSTOMIZER_CONTAINER_DIR;
     }
 
     /**
@@ -201,7 +267,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
      */
     protected function _getCustomLessFilePath()
     {
-        return $this->_getVarThemeCustomizerDirectoryPath() . '/' . self::FIELDS_CUSTOM_LESS_FILE_PATH;
+        return self::VAR_THEME_CUSTOMIZER_PATH . '/' . self::FIELDS_CUSTOM_LESS_FILE_PATH;
     }
 
     /**
@@ -215,6 +281,43 @@ class Less extends \Magento\Framework\Model\AbstractModel
             DirectoryList::PUB . '/' . DirectoryList::STATIC_VIEW . '/' . $this->_getStaticThemeDirectoryPath(),
             null, null
         );
+    }
+    
+    /**
+     * Get App customizer directory absolute path
+     *
+     * @return string
+     */
+    protected function _getDesignCustomizerDirectoryAbsolutePath()
+    {
+        return $this->_appDirectoryReader->getAbsolutePath(
+            $this->_getDesignThemeDirectoryPath(),
+            null, null
+        );
+    }
+    
+    /**
+     * Get Var theme customizer directory absolute path
+     *
+     * @return string
+     */
+    protected function _getVarThemeCustomizerDirectoryAbsolutePath()
+    {
+        return $this->_varDirectoryReader->getAbsolutePath(
+            $this->_getVarThemeCustomizerDirectoryPath(),
+            null, null
+        );
+    }
+    
+    /**
+     * Get Var theme customizer container directory absolute path
+     *
+     * @return string
+     */
+    protected function _getVarThemeCustomizerContainerDirectoryAbsolutePath()
+    {
+        return $this->_getVarThemeCustomizerDirectoryAbsolutePath()
+            . '/' . self::VAR_THEME_CUSTOMIZER_CONTAINER_DIR;
     }
 
     /**
@@ -249,7 +352,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected function _getThemeLessFileAbsolutePath()
     {
         return $this->_varDirectoryReader->getAbsolutePath(
-            $this->_getVarThemeCustomizerDirectoryPath() . '/' . self::THEME_FILE_PATH
+            $this->_getVarThemeCustomizerContainerDirPath() . '/' . self::THEME_FILE_PATH
         );
     }
 
@@ -312,7 +415,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected function _fieldsFileExists()
     {
         return $this->_varDirectoryReader->isFile(
-            $this->_getVarThemeCustomizerDirectoryPath()
+            $this->_getVarThemeCustomizerContainerDirPath()
             . '/' . self::FIELDS_FILE_PATH
         );
     }
@@ -325,7 +428,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected function _getFieldsLessContent()
     {
         return $this->_varDirectoryReader->readFile(
-            $this->_getVarThemeCustomizerDirectoryPath()
+            $this->_getVarThemeCustomizerContainerDirPath()
             . '/' . self::FIELDS_FILE_PATH
         );
     }
@@ -338,7 +441,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected function _fieldsSourceFileExists()
     {
         return $this->_varDirectoryReader->isFile(
-            $this->_getVarThemeCustomizerDirectoryPath()
+            $this->_getVarThemeCustomizerContainerDirPath()
             . '/' . self::VAR_SOURCE_FILE_PATH
         );
     }
@@ -351,9 +454,31 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected function _getFieldsSourceLessContent()
     {
         return $this->_varDirectoryReader->readFile(
-            $this->_getVarThemeCustomizerDirectoryPath()
+            $this->_getVarThemeCustomizerContainerDirPath()
             . '/' . self::VAR_SOURCE_FILE_PATH
         );
+    }
+
+    /**
+     * Create customizer LESS file symlink
+     *
+     * @return string
+     */
+    protected function _createDesignVarSymlink()
+    {
+        if (!is_readable($this->_getVarThemeCustomizerDirectoryAbsolutePath())) {
+            $this->_appDirectoryWriter->getDriver()->createDirectory(
+                $this->_getVarThemeCustomizerDirectoryAbsolutePath(),
+                DriverInterface::WRITEABLE_DIRECTORY_MODE
+            );
+        }
+        
+        if (!is_readable($this->_getVarThemeCustomizerContainerDirectoryAbsolutePath())) {
+            $this->_appDirectoryWriter->getDriver()->symlink(
+                $this->_getDesignCustomizerDirectoryAbsolutePath(),
+                $this->_getVarThemeCustomizerContainerDirectoryAbsolutePath()
+            );
+        }
     }
 
     /**
@@ -617,6 +742,8 @@ class Less extends \Magento\Framework\Model\AbstractModel
      */
     public function parseFieldsLess()
     {
+        $this->_createDesignVarSymlink();
+
         if (!$this->_fieldsFileExists()) {
             return [];
         }
@@ -764,7 +891,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
             return '';
         }
         if (!$this->_varDirectoryReader->isReadable(
-            $this->_getVarThemeCustomizerDirectoryPath() . '/' . self::THEME_FILE_PATH
+            $this->_getVarThemeCustomizerContainerDirPath() . '/' . self::THEME_FILE_PATH
         )) {
             return '';
         }
@@ -852,6 +979,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
      */
     public function saveThemeCustomizations($content)
     {
+        $this->_createDesignVarSymlink();
         $less = $this->convertFormDataToLess($content);
         $this->setFieldsCustomLessContent($less);
         $css = $this->getCssFromLess($less);
