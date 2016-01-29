@@ -54,6 +54,11 @@ class Customizer extends \Magento\Theme\Block\Adminhtml\System\Design\Theme\Edit
     protected $_fieldsSource;
 
     /**
+     * @var Font
+     */
+    protected $_font;
+
+    /**
      * @var Yesno
      */
     protected $_yesNo;
@@ -74,8 +79,9 @@ class Customizer extends \Magento\Theme\Block\Adminhtml\System\Design\Theme\Edit
      * @param \ShopGo\ThemeCustomizer\Helper\Data $themeCustomizerHelper
      * @param \ShopGo\ThemeCustomizer\Model\Source\ColorPickerPalette $colorPickerPalette
      * @param \ShopGo\ThemeCustomizer\Model\Less $themeCustomizerLess
-     * @param \Magento\Config\Model\Config\Source\Yesno $yesNo
-     * @param \Magento\Config\Model\Config\Source\Enabledisable $enableDisable
+     * @param Font $font
+     * @param Yesno $yesNo
+     * @param Enabledisable $enableDisable
      * @param array $data
      */
     public function __construct(
@@ -87,6 +93,7 @@ class Customizer extends \Magento\Theme\Block\Adminhtml\System\Design\Theme\Edit
         \ShopGo\ThemeCustomizer\Helper\Data $themeCustomizerHelper,
         \ShopGo\ThemeCustomizer\Model\Source\ColorPickerPalette $colorPickerPalette,
         \ShopGo\ThemeCustomizer\Model\Less $themeCustomizerLess,
+        Font $font,
         Yesno $yesNo,
         Enabledisable $enableDisable,
         array $data = []
@@ -106,6 +113,7 @@ class Customizer extends \Magento\Theme\Block\Adminhtml\System\Design\Theme\Edit
         $this->_fields = $this->_themeCustomizerLess->parseFieldsLess();
         $this->_fieldsSource = $this->_themeCustomizerLess->parseFieldsSourceLess();
 
+        $this->_font = $font;
         $this->_yesNo = $yesNo;
         $this->_enableDisable = $enableDisable;
     }
@@ -138,11 +146,17 @@ class Customizer extends \Magento\Theme\Block\Adminhtml\System\Design\Theme\Edit
      */
     protected function _addSpecialFieldTypesAttributes($fieldType, $id, $fieldAttributes, $value = '')
     {
+        $font = strpos($fieldType, 'font') !== false ? $fieldType : '';
+
         switch ($fieldType) {
             case 'color':
                 // The line below is temporarily disabled, until a solution is found for spectrum plugin loading
                 #$fieldAttributes['after_element_html'] = "<script>setColorPicker('{$id}', '{$value}')</script>";
                 $fieldAttributes['after_element_html'] = $this->_addColorPickerScript($id, $value);
+                break;
+            case $font:
+                $language = substr($fieldType, strpos($fieldType, '_') + 1, strlen($fieldType));
+                $fieldAttributes['values'] = $this->_font->toOptionArray()[$language];
                 break;
             case 'yesno':
                 $yesno = $this->_yesNo->toOptionArray();

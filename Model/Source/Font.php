@@ -16,10 +16,14 @@ class Font
     public function toOptionArray()
     {
         return [
-            ['value' => '', 'label' => __('--Please Select--')],
-            ['value' => 'font1', 'label' => __('Font 1')],
-            ['value' => 'font2', 'label' => __('Font 2')],
-            ['value' => 'font3', 'label' => __('Font 3')]
+            'en' => [
+                'Roboto Slab, Helvetica Neue, Helvetica, Arial, sans-serif',
+                'Robotos Slab, Helvetica Neue, Helvetica, Arial, sans-serif'
+            ],
+            'ar' => [
+                'Roboto Slab, Helvetica Neue, Helvetica, Arial, sans-serif',
+                'Robotos Slab, Helvetica Neue, Helvetica, Arial, sans-serif'
+            ]
         ];
     }
 }
