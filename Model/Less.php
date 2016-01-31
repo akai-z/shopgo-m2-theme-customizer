@@ -23,12 +23,12 @@ class Less extends \Magento\Framework\Model\AbstractModel
      * Design customizer LESS path
      */
     const DESIGN_CUSTOMIZER_LESS_PATH = 'web/css/source/customizer';
-    
+
     /**
      * Var theme customizer path
      */
     const VAR_THEME_CUSTOMIZER_PATH = 'shopgo/theme_customizer';
-    
+
     /**
      * Var theme customizer container directory
      */
@@ -93,7 +93,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
      * @var \Magento\Framework\Filesystem\Directory\WriteInterface
      */
     protected $_varDirectoryWriter;
-    
+
     /**
      * @var \Magento\Framework\Filesystem\Directory\ReadInterface
      */
@@ -201,7 +201,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
          $this->_varDirectoryWriter = $this->_filesystem
             ->getDirectoryWrite(DirectoryList::VAR_DIR);
     }
-    
+
     /**
      * Set App directory writer
      */
@@ -249,7 +249,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
     {
         return self::VAR_THEME_CUSTOMIZER_PATH . '/' . $this->_theme;
     }
-    
+
     /**
      * Get Var theme customizer container directory path
      *
@@ -282,7 +282,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
             null, null
         );
     }
-    
+
     /**
      * Get App customizer directory absolute path
      *
@@ -295,7 +295,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
             null, null
         );
     }
-    
+
     /**
      * Get Var theme customizer directory absolute path
      *
@@ -308,7 +308,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
             null, null
         );
     }
-    
+
     /**
      * Get Var theme customizer container directory absolute path
      *
@@ -472,7 +472,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
                 DriverInterface::WRITEABLE_DIRECTORY_MODE
             );
         }
-        
+
         if (!is_readable($this->_getVarThemeCustomizerContainerDirectoryAbsolutePath())) {
             $this->_appDirectoryWriter->getDriver()->symlink(
                 $this->_getDesignCustomizerDirectoryAbsolutePath(),
