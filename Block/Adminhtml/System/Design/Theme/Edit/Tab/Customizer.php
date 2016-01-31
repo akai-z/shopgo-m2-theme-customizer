@@ -6,6 +6,7 @@
 namespace ShopGo\ThemeCustomizer\Block\Adminhtml\System\Design\Theme\Edit\Tab;
 
 use Magento\Framework\App\Area;
+use ShopGo\ThemeCustomizer\Model\Source\Font;
 use Magento\Config\Model\Config\Source\Yesno;
 use Magento\Config\Model\Config\Source\Enabledisable;
 
