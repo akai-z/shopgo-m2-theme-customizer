@@ -464,7 +464,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
      *
      * @return string
      */
-    protected function _createDesignVarSymlink()
+    public function createDesignVarSymlink()
     {
         if (!is_readable($this->_getVarThemeCustomizerDirectoryAbsolutePath())) {
             $this->_appDirectoryWriter->getDriver()->createDirectory(
@@ -742,7 +742,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
      */
     public function parseFieldsLess()
     {
-        $this->_createDesignVarSymlink();
+        $this->createDesignVarSymlink();
 
         if (!$this->_fieldsFileExists()) {
             return [];
@@ -979,7 +979,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
      */
     public function saveThemeCustomizations($content)
     {
-        $this->_createDesignVarSymlink();
+        $this->createDesignVarSymlink();
         $less = $this->convertFormDataToLess($content);
         $this->setFieldsCustomLessContent($less);
         $css = $this->getCssFromLess($less);

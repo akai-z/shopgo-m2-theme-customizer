@@ -67,6 +67,7 @@ class GenerateLessCommand extends Command
         if (!is_null($theme)) {
             $this->_less->setAreaCode('adminhtml');
             $this->_less->setTheme($theme);
+            $this->_less->createDesignVarSymlink();
 
             $less   = $this->_less->getFieldsCustomLessContent();
             $result = $this->_less->createCustomLessFile($less);
