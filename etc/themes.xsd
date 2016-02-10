@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © 2015 ShopGo. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="config">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="themes"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="themes">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice minOccurs="1" maxOccurs="unbounded">
+                    <xs:element ref="vendor"/>
+                </xs:choice>
+            </xs:sequence>
+
+            <xs:attributeGroup ref="elementsAttributeGroup"/>
+        </xs:complexType>
+
+        <xs:unique name="uniqueItemVendor">
+            <xs:annotation>
+                <xs:documentation>
+                    Attribute id is unique under all sections
+                </xs:documentation>
+            </xs:annotation>
+            <xs:selector xpath="vendor"/>
+            <xs:field xpath="@id"/>
+        </xs:unique>
+    </xs:element>
+
+    <xs:attributeGroup name="elementsAttributeGroup">
+        <xs:attribute name="id" type="xs:string" use="required"/>
+    </xs:attributeGroup>
+
+    <xs:element name="vendor">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                    <xs:element ref="theme"/>
+                </xs:choice>
+            </xs:sequence>
+
+            <xs:attributeGroup ref="elementsAttributeGroup"/>
+        </xs:complexType>
+
+        <xs:unique name="uniqueItemTheme">
+            <xs:annotation>
+                <xs:documentation>
+                    Attribute id is unique under all sections
+                </xs:documentation>
+            </xs:annotation>
+            <xs:selector xpath="theme"/>
+            <xs:field xpath="@id"/>
+        </xs:unique>
+    </xs:element>
+
+    <xs:element name="theme">
+        <xs:annotation>
+            <xs:documentation>
+                Theme Resource. Recursive complex type
+            </xs:documentation>
+        </xs:annotation>
+
+        <xs:complexType>
+            <xs:attributeGroup ref="elementsAttributeGroup"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

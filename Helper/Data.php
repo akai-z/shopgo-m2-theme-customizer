@@ -10,19 +10,19 @@ use Magento\Framework\App\Helper\AbstractHelper;
 class Data extends AbstractHelper
 {
      /**
-     * @var \ShopGo\ThemeCustomizer\Model\Source\Theme
+     * @var \ShopGo\ThemeCustomizer\Model\Config\Reader
      */
-    protected $_themes;
+    protected $_themeConfig;
 
     /**
-     * @param \Magento\Framework\App\Helper\Context $context,
-     * @param \ShopGo\ThemeCustomizer\Model\Source\Theme $theme
+     * @param \Magento\Framework\App\Helper\Context $context
+     * @param \ShopGo\ThemeCustomizer\Model\Config\Reader $themeConfig
      */
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
-        \ShopGo\ThemeCustomizer\Model\Source\Theme $theme
+        \ShopGo\ThemeCustomizer\Model\Config\Reader $themeConfig
     ) {
-        $this->_themes = $theme->toOptionArray();
+        $this->_themeConfig = $themeConfig;
         parent::__construct($context);
     }
 
@@ -35,11 +35,28 @@ class Data extends AbstractHelper
     public function isCustomizableTheme($theme)
     {
         $result = false;
+        $theme  = explode('/', $theme);
+        $themes = $this->_themeConfig->getConfigElement(['themes' => []]);
 
-        foreach ($this->_themes as $_theme) {
-            if ($theme == $_theme['value']) {
-                $result = true;
-                break;
+        if (!$themes) {
+            return $result;
+        }
+        if (!$themes->hasChildNodes()) {
+            return $result;
+        }
+
+        foreach ($themes->childNodes as $vendor) {
+            if ($vendor->getAttribute('id') == $theme[0]) {
+                if ($vendor->hasChildNodes()) {
+                    foreach ($vendor->childNodes as $_theme) {
+                        if ($_theme->getAttribute('id') == $theme[1]) {
+                            return true;
+                        }
+                    }
+                } else {
+                    $result = true;
+                    break;
+                }
             }
         }
 
