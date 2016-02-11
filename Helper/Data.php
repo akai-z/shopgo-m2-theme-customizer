@@ -27,6 +27,39 @@ class Data extends AbstractHelper
     }
 
     /**
+     * Get theme customizer themes config
+     *
+     * @param string $theme
+     * @return mixed
+     */
+    public function getThemeCustomizerConfig($theme = '')
+    {
+        $element = ['themes' => []];
+
+        if ($theme && $theme != '*') {
+            $theme = explode('/', $theme);
+            $element['vendor'] = ['attributes' => ['id' => $theme[0]]];
+
+            if (isset($theme[1]) && $theme[1] != '*') {
+                $element['theme'] = ['attributes' => ['id' => $theme[1]]];
+            }
+        }
+
+        $config = $this->_themeConfig->getConfigElement($element);
+
+        if (!$config && isset($element['theme'])) {
+            unset($element['theme']);
+
+            $config = $this->_themeConfig->getConfigElement($element);
+            if ($config->hasChildNodes()) {
+                $config = false;
+            }
+        }
+
+        return $config;
+    }
+
+    /**
      * Check whether theme is customizable
      *
      * @param string $theme
@@ -34,32 +67,6 @@ class Data extends AbstractHelper
      */
     public function isCustomizableTheme($theme)
     {
-        $result = false;
-        $theme  = explode('/', $theme);
-        $themes = $this->_themeConfig->getConfigElement(['themes' => []]);
-
-        if (!$themes) {
-            return $result;
-        }
-        if (!$themes->hasChildNodes()) {
-            return $result;
-        }
-
-        foreach ($themes->childNodes as $vendor) {
-            if ($vendor->getAttribute('id') == $theme[0]) {
-                if ($vendor->hasChildNodes()) {
-                    foreach ($vendor->childNodes as $_theme) {
-                        if ($_theme->getAttribute('id') == $theme[1]) {
-                            return true;
-                        }
-                    }
-                } else {
-                    $result = true;
-                    break;
-                }
-            }
-        }
-
-        return $result;
+        return $this->getThemeCustomizerConfig($theme) ? true : false;
     }
 }
