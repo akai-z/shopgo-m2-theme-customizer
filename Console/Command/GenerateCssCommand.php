@@ -27,15 +27,30 @@ class GenerateCssCommand extends Command
      */
     private $_less;
 
+    /**
+     * @var \Magento\Theme\Model\Theme
+     */
+    private $_theme;
+
+    /**
+     * @var \ShopGo\ThemeCustomizer\Helper\Data
+     */
+    private $_helper;
 
     /**
      * @param Less $less
+     * @param \Magento\Theme\Model\Theme $theme
+     * @param \ShopGo\ThemeCustomizer\Helper\Data $helper
      */
     public function __construct(
-        Less $less
+        Less $less,
+        \Magento\Theme\Model\Theme $theme,
+        \ShopGo\ThemeCustomizer\Helper\Data $helper
     ) {
         parent::__construct();
-        $this->_less = $less;
+        $this->_less   = $less;
+        $this->_theme  = $theme;
+        $this->_helper = $helper;
     }
 
     /**
@@ -48,7 +63,7 @@ class GenerateCssCommand extends Command
             ->setDefinition([
                 new InputArgument(
                     self::THEME_ARGUMENT,
-                    InputArgument::REQUIRED,
+                    InputArgument::OPTIONAL,
                     'Theme'
                 )
             ]);
@@ -57,28 +72,81 @@ class GenerateCssCommand extends Command
     }
 
     /**
+     * Generate CSS content
+     *
+     * @param string $theme
+     * @return boolean
+     */
+    private function _generate($theme)
+    {
+        $this->_less->setTheme($theme);
+        $this->_less->createDesignVarSymlink();
+
+        $less = $this->_less->getFieldsCustomLessContent();
+        $css  = $this->_less->getCssFromLess($less);
+
+        return $this->_less->saveCustomCss($css);
+    }
+
+    /**
+     * Generate CSS per vendor theme
+     *
+     * @param string $vendor
+     * @return boolean
+     */
+    private function _generatePerVendorTheme($vendor)
+    {
+        $result = true;
+        $themeCollection = $this->_theme->getCollection()->getItems();
+
+        foreach ($themeCollection as $_theme) {
+            $_vendor = substr($_theme->getCode(), 0, strpos($_theme->getCode(), '/'));
+
+            if ($vendor == $_vendor) {
+                $result = $result && $this->_generate($_theme->getCode());
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $result = 'Could not run command';
+        $result = true;
         $theme  = $input->getArgument(self::THEME_ARGUMENT);
 
-        if (!is_null($theme)) {
-            $this->_less->setAreaCode('adminhtml');
-            $this->_less->setTheme($theme);
-            $this->_less->createDesignVarSymlink();
+        $this->_less->setAreaCode('adminhtml');
 
-            $less   = $this->_less->getFieldsCustomLessContent();
-            $css    = $this->_less->getCssFromLess($less);
-            $result = $this->_less->saveCustomCss($css);
+        if (!is_null($theme) && $theme != '*') {
+            $themes = $this->_helper->getThemeCustomizerConfig($theme);
+            $theme  = explode('/', $theme);
 
-            $result = $result
-                ? 'Custom CSS file has been generated successfully!'
-                : 'Failed to generate custom CSS file';
+            if ($themes === false) {
+                $result = false;
+            } elseif ($themes && !empty($theme[1]) && $theme[1] != '*') {
+                $result = $this->_generate(implode('/', $theme));
+            } else {
+                // Be careful!
+                // This will generate CSS content for all themes under vendor.
+                // Regardless whether they are theme customizer ready or not.
+                $result = $this->_generatePerVendorTheme($theme[0]);
+            }
         } else {
-            throw new \InvalidArgumentException('Argument ' . self::THEME_ARGUMENT . ' is missing.');
+            $themeCollection = $this->_theme->getCollection()->getItems();
+
+            foreach ($themeCollection as $_theme) {
+                if ($this->_helper->isCustomizableTheme($_theme->getCode())) {
+                    $result = $result && $this->_generate($_theme->getCode());
+                }
+            }
         }
+
+        $result = $result
+            ? 'Custom CSS file(s) has(have) been generated successfully!'
+            : 'Failed to generate custom CSS file(s)';
 
         $output->writeln('<info>' . $result . '</info>');
     }
