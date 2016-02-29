@@ -8,6 +8,7 @@ namespace ShopGo\ThemeCustomizer\Model;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\State;
 use Magento\Framework\Filesystem\DriverInterface;
+use Magento\Framework\Component\ComponentRegistrar;
 
 /**
  * Less model
@@ -85,6 +86,11 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected $_filesystem;
 
     /**
+     * @var \Magento\Framework\Filesystem\Driver\File
+     */
+    protected $_file;
+
+    /**
      * @var \Magento\Framework\Filesystem\Directory\ReadInterface
      */
     protected $_varDirectoryReader;
@@ -93,16 +99,6 @@ class Less extends \Magento\Framework\Model\AbstractModel
      * @var \Magento\Framework\Filesystem\Directory\WriteInterface
      */
     protected $_varDirectoryWriter;
-
-    /**
-     * @var \Magento\Framework\Filesystem\Directory\ReadInterface
-     */
-    protected $_appDirectoryReader;
-
-    /**
-     * @var \Magento\Framework\Filesystem\Directory\WriteInterface
-     */
-    protected $_appDirectoryWriter;
 
     /**
      * @var \Magento\Framework\Filesystem\Directory\WriteInterface
@@ -135,28 +131,37 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected $_appState;
 
     /**
+     * @var ComponentRegistrar
+     */
+    protected $_componentRegistrar;
+
+    /**
      * @var string
      */
     private $_varSection;
 
     /**
      * @param \Magento\Framework\Filesystem $filesystem
+     * @param \Magento\Framework\Filesystem\Driver\File $file
      * @param \Magento\Framework\Model\Context $context
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Config\Model\Config\Factory $configFactory
      * @param \Magento\Framework\Message\ManagerInterface $messageManager
-     * @param \Magento\Framework\App\State $appState
+     * @param State $appState
+     * @param ComponentRegistrar $componentRegistrar
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
      * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
      * @param array $data
      */
     public function __construct(
         \Magento\Framework\Filesystem $filesystem,
+        \Magento\Framework\Filesystem\Driver\File $file,
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
         \Magento\Config\Model\Config\Factory $configFactory,
         \Magento\Framework\Message\ManagerInterface $messageManager,
         State $appState,
+        ComponentRegistrar $componentRegistrar,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
@@ -164,24 +169,15 @@ class Less extends \Magento\Framework\Model\AbstractModel
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
 
         $this->_filesystem    = $filesystem;
+        $this->_file          = $file;
         $this->_configFactory = $configFactory;
         $this->messageManager = $messageManager;
         $this->_appState      = $appState;
+        $this->_componentRegistrar = $componentRegistrar;
 
         $this->_setVarDirectoryReader();
         $this->_setVarDirectoryWriter();
-        $this->_setAppDirectoryReader();
-        $this->_setAppDirectoryWriter();
         $this->_setStaticDirectoryWriter();
-    }
-
-    /**
-     * Set App directory reader
-     */
-    protected function _setAppDirectoryReader()
-    {
-        $this->_appDirectoryReader = $this->_filesystem
-            ->getDirectoryRead(DirectoryList::APP);
     }
 
     /**
@@ -200,15 +196,6 @@ class Less extends \Magento\Framework\Model\AbstractModel
     {
          $this->_varDirectoryWriter = $this->_filesystem
             ->getDirectoryWrite(DirectoryList::VAR_DIR);
-    }
-
-    /**
-     * Set App directory writer
-     */
-    protected function _setAppDirectoryWriter()
-    {
-         $this->_appDirectoryWriter = $this->_filesystem
-            ->getDirectoryWrite(DirectoryList::APP);
     }
 
     /**
@@ -237,7 +224,12 @@ class Less extends \Magento\Framework\Model\AbstractModel
      */
     protected function _getDesignThemeDirectoryPath()
     {
-        return self::DESIGN_FRONTEND_PATH . '/' . $this->_theme . '/' . self::DESIGN_CUSTOMIZER_LESS_PATH;
+        $themeFullPath = $this->_componentRegistrar->getPath(
+            ComponentRegistrar::THEME,
+            'frontend/' . $this->_theme
+        );
+
+        return $themeFullPath . '/' . self::DESIGN_CUSTOMIZER_LESS_PATH;
     }
 
     /**
@@ -268,6 +260,16 @@ class Less extends \Magento\Framework\Model\AbstractModel
     protected function _getCustomLessFilePath()
     {
         return self::VAR_THEME_CUSTOMIZER_PATH . '/' . self::FIELDS_CUSTOM_LESS_FILE_PATH;
+    }
+
+    /**
+     * Get clone theme less file path
+     *
+     * @return string
+     */
+    protected function _getCloneThemeLessFilePath()
+    {
+        return self::VAR_THEME_CUSTOMIZER_PATH . '/' . self::THEME_FILE_PATH;
     }
 
     /**
@@ -342,6 +344,16 @@ class Less extends \Magento\Framework\Model\AbstractModel
             $this->_getStaticThemeDirectoryPath() . '/' . $locale . '/' . self::CUSTOM_CSS_FILE_PATH,
             null, null
         );
+    }
+
+    /**
+     * Get clone theme LESS file absolute path
+     *
+     * @return string
+     */
+    protected function _getCloneThemeLessFileAbsolutePath()
+    {
+        return $this->_varDirectoryReader->getAbsolutePath($this->_getCloneThemeLessFilePath());
     }
 
     /**
@@ -467,15 +479,15 @@ class Less extends \Magento\Framework\Model\AbstractModel
     public function createDesignVarSymlink()
     {
         if (!is_readable($this->_getVarThemeCustomizerDirectoryAbsolutePath())) {
-            $this->_appDirectoryWriter->getDriver()->createDirectory(
+            $this->_file->createDirectory(
                 $this->_getVarThemeCustomizerDirectoryAbsolutePath(),
                 DriverInterface::WRITEABLE_DIRECTORY_MODE
             );
         }
 
         if (!is_readable($this->_getVarThemeCustomizerContainerDirectoryAbsolutePath())) {
-            $this->_appDirectoryWriter->getDriver()->symlink(
-                $this->_getDesignCustomizerDirectoryAbsolutePath(),
+            $this->_file->symlink(
+                $this->_getDesignThemeDirectoryPath(),
                 $this->_getVarThemeCustomizerContainerDirectoryAbsolutePath()
             );
         }
@@ -713,6 +725,34 @@ class Less extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
+     * Clone theme LESS file
+     *
+     * @return bool
+     */
+    protected function _cloneThemeLessFile()
+    {
+        $sourceThemeLessFilePath = $this->_getDesignThemeDirectoryPath() . '/' . self::THEME_FILE_PATH;
+
+        return $this->_file->copy(
+            $sourceThemeLessFilePath,
+            $this->_getCloneThemeLessFileAbsolutePath()
+        );
+    }
+
+    /**
+     * Set fields custom LESS path
+     *
+     * @return bool
+     */
+    protected function _setFieldsCustomLessPath()
+    {
+        $lessContent = $this->_file->fileGetContents($this->_getCloneThemeLessFileAbsolutePath());
+        $lessContent = str_replace('{theme_path}', $this->_getDesignThemeDirectoryPath(), $lessContent);
+
+        return $this->_file->filePutContents($this->_getCloneThemeLessFileAbsolutePath(), $lessContent);
+    }
+
+    /**
      * Create custom less file
      *
      * @param string $content
@@ -896,7 +936,16 @@ class Less extends \Magento\Framework\Model\AbstractModel
             return '';
         }
 
-        $parser->parseFile($this->_getThemeLessFileAbsolutePath());
+        $this->_cloneThemeLessFile();
+        $this->_setFieldsCustomLessPath();
+
+        //@TODO: This must be revisited again.
+        //To check whether this can be improved
+        //when it comes to importing and parsing.
+        //A research about the following issue and
+        //the function "SetImportDirs" is needed:
+        //https://github.com/oyejorge/less.php/issues/46
+        $parser->parseFile($this->_getCloneThemeLessFileAbsolutePath());
         $css = $parser->getCss();
 
         return $css;
