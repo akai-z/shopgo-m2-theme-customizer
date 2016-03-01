@@ -51,7 +51,7 @@ class Data extends AbstractHelper
             unset($element['theme']);
 
             $config = $this->_themeConfig->getConfigElement($element);
-            if ($config->hasChildNodes()) {
+            if ($config && $config->hasChildNodes()) {
                 $config = false;
             }
         }
