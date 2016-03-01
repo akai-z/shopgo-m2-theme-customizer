@@ -107,12 +107,13 @@ class Customizer extends \Magento\Theme\Block\Adminhtml\System\Design\Theme\Edit
         $this->_themeCustomizerHelper = $themeCustomizerHelper;
         $this->_themeCustomizerLess   = $themeCustomizerLess;
 
-        $this->_themeCustomizerLess->setTheme(
-            $this->_coreRegistry->registry('current_theme')->getCode()
-        );
+        $themeCode = $this->_coreRegistry->registry('current_theme')->getCode();
 
-        $this->_fields = $this->_themeCustomizerLess->parseFieldsLess();
-        $this->_fieldsSource = $this->_themeCustomizerLess->parseFieldsSourceLess();
+        if ($this->_themeCustomizerHelper->isCustomizableTheme($themeCode)) {
+            $this->_themeCustomizerLess->setTheme($themeCode);
+            $this->_fields = $this->_themeCustomizerLess->parseFieldsLess();
+            $this->_fieldsSource = $this->_themeCustomizerLess->parseFieldsSourceLess();
+        }
 
         $this->_font = $font;
         $this->_yesNo = $yesNo;
