@@ -147,6 +147,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Config\Model\Config\Factory $configFactory
      * @param \Magento\Framework\Message\ManagerInterface $messageManager
+     * @param \Magento\Framework\App\Cache\TypeListInterface $cacheTypeList
      * @param State $appState
      * @param ComponentRegistrar $componentRegistrar
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
@@ -160,6 +161,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
         \Magento\Framework\Registry $registry,
         \Magento\Config\Model\Config\Factory $configFactory,
         \Magento\Framework\Message\ManagerInterface $messageManager,
+        \Magento\Framework\App\Cache\TypeListInterface $cacheTypeList,
         State $appState,
         ComponentRegistrar $componentRegistrar,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
@@ -172,6 +174,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
         $this->_file          = $file;
         $this->_configFactory = $configFactory;
         $this->messageManager = $messageManager;
+        $this->_cacheTypeList = $cacheTypeList;
         $this->_appState      = $appState;
         $this->_componentRegistrar = $componentRegistrar;
 
@@ -872,6 +875,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
             ];
 
             $this->_setConfigData($configData);
+            $this->_cacheTypeList->cleanType('config');
 
             $this->messageManager->addSuccess(__('You saved the configuration.'));
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
