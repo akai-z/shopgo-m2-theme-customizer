@@ -13,14 +13,24 @@ use Magento\Framework\App\Filesystem\DirectoryList;
 class Reader extends \Magento\Framework\Config\Reader\Filesystem
 {
     /**
-     * Config directory path
+     * Vendor config directory path
      */
-    const CONFIG_DIRECTORY_PATH = 'shopgo/theme_customizer/';
+    const VENDOR_CONFIG_DIRECTORY_PATH = 'vendor/shopgo/theme-customizer-config/';
+
+    /**
+     * Var config directory path
+     */
+    const VAR_CONFIG_DIRECTORY_PATH = 'shopgo/theme_customizer/';
 
     /**
      * @var \Magento\Framework\Filesystem
      */
     protected $_filesystem;
+
+    /**
+     * @var \Magento\Framework\Filesystem\Directory\ReadInterface
+     */
+    protected $_rootDirectory;
 
     /**
      * @var \Magento\Framework\Filesystem\Directory\ReadInterface
@@ -73,6 +83,7 @@ class Reader extends \Magento\Framework\Config\Reader\Filesystem
         $this->_fileName   = $fileName;
         $this->validationState = $validationState;
 
+        $this->_setRootDirectory();
         $this->_setVarDirectory();
 
         if ($this->_configFileExists()) {
@@ -95,6 +106,15 @@ class Reader extends \Magento\Framework\Config\Reader\Filesystem
     }
 
     /**
+     * Set Root directory
+     */
+    protected function _setRootDirectory()
+    {
+        $this->_rootDirectory = $this->_filesystem
+            ->getDirectoryRead(DirectoryList::ROOT);
+    }
+
+    /**
      * Set Var directory
      */
     protected function _setVarDirectory()
@@ -104,14 +124,26 @@ class Reader extends \Magento\Framework\Config\Reader\Filesystem
     }
 
     /**
-     * Get config file absolute path
+     * Get Vendor config file absolute path
      *
      * @return string
      */
-    protected function _getConfigFileAbsolutePath()
+    protected function _getVendorConfigFileAbsolutePath()
+    {
+        return $this->_rootDirectory->getAbsolutePath(
+            self::VENDOR_CONFIG_DIRECTORY_PATH . $this->_fileName
+        );
+    }
+
+    /**
+     * Get Var config file absolute path
+     *
+     * @return string
+     */
+    protected function _getVarConfigFileAbsolutePath()
     {
         return $this->_varDirectory->getAbsolutePath(
-            self::CONFIG_DIRECTORY_PATH . $this->_fileName
+            self::VAR_CONFIG_DIRECTORY_PATH . $this->_fileName
         );
     }
 
@@ -122,9 +154,17 @@ class Reader extends \Magento\Framework\Config\Reader\Filesystem
      */
     protected function _getConfigFileXmlContent()
     {
-        return $this->_varDirectory->readFile(
-            self::CONFIG_DIRECTORY_PATH . $this->_fileName
+        $config = $this->_rootDirectory->readFile(
+            self::VENDOR_CONFIG_DIRECTORY_PATH . $this->_fileName
         );
+
+        if (!$config) {
+            $config = $this->_varDirectory->readFile(
+                self::VAR_CONFIG_DIRECTORY_PATH . $this->_fileName
+            );
+        }
+
+        return $config;
     }
 
     /**
@@ -152,9 +192,15 @@ class Reader extends \Magento\Framework\Config\Reader\Filesystem
      */
     protected function _configFileExists()
     {
-        return $this->_varDirectory->isFile(
-            self::CONFIG_DIRECTORY_PATH . $this->_fileName
+        $vendorConfig = $this->_rootDirectory->isFile(
+            self::VENDOR_CONFIG_DIRECTORY_PATH . $this->_fileName
         );
+
+        $varConfig = $this->_varDirectory->isFile(
+            self::VAR_CONFIG_DIRECTORY_PATH . $this->_fileName
+        );
+
+        return $vendorConfig || $varConfig;
     }
 
     /**
