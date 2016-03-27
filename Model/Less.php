@@ -23,7 +23,7 @@ class Less extends \Magento\Framework\Model\AbstractModel
     /**
      * Design customizer LESS path
      */
-    const DESIGN_CUSTOMIZER_LESS_PATH = 'web/css/source/customizer';
+    const DESIGN_CUSTOMIZER_LESS_PATH = 'web/css/source/.customizer';
 
     /**
      * Var theme customizer path
