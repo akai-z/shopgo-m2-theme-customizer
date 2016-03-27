@@ -91,14 +91,14 @@ class Edit extends \Magento\Theme\Block\Adminhtml\System\Design\Theme\Edit
                     ['id' => $theme->getId()]
                 );
 
-                $resetJsConfirmMsg = __('Please confirm customizations reset. All saved customizations will be lost.');
+                $resetJsConfirmMsg = __('By confirming this action, all of your changes will be lost and customizer settings will be set back to their default values.');
 
                 $resetJs = "resetCustomizer('{$resetCustomizerUrl}', '{$resetJsConfirmMsg}')";
 
                 $this->buttonList->remove('reset');
                 $this->addButton(
                     'reset-customizer',
-                    ['label' => __('Reset Customizer'), 'onclick' => $resetJs, 'class' => 'reset'],
+                    ['label' => __('Reset Customizer Settings'), 'onclick' => $resetJs, 'class' => 'reset'],
                     -1
                 );
              }
