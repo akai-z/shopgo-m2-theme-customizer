@@ -13,11 +13,12 @@ Theme Customizer
 
 ## <a name="syn"></a>Synopsis
 
-TODO
+A module that allows users to customize their themes.
 
 ## <a name="over"></a>Overview
 
-TODO
+Theme Customizer module allows store admins to customize some of the frontend themes elements that are predefined by themes developers.
+The module uses LESS in order to achieve that.
 
 ## <a name="install"></a>Installation
 
